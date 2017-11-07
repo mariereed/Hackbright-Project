@@ -1,13 +1,14 @@
 """Models and database functions for my project."""
 
 from flask_sqlalchemy import SQLAlchemy
-
+import sys
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
 # object, where we do most of our interactions (like committing, etc.)
 
 db = SQLAlchemy()
-
+reload(sys)
+sys.setdefaultencoding('utf-8')
 ##############################################################################
 # Model definitions
 
@@ -58,6 +59,9 @@ class Article(db.Model):
     activity = db.Column(db.Boolean, default=True)
     description = db.Column(db.String(50000), nullable=True)
     content = db.Column(db.String(1000000), nullable=True)
+
+    # Define relationship to blog
+    blog = db.relationship("Blog", backref='blogs')
 
     def __repr__(self):
         """Provide helpful representation when printed."""

@@ -1,16 +1,26 @@
 {% extends 'base.html' %}
-
+{% block title %}My Data{% endblock %}
 {% block content %}
 	<h1>OMG is that myyyyy data?!</h1>
 	<br>
-	{% for blog in blogs %}
-
-		<h2>Blog Title: {{blog.name}}</h2>
-		{% if blog.build_date != None %}
+	{% for article in articles %}
+		<h2>{{article.blog.name}}</h2>
+		{% if article.blog.build_date != None %}
 			<ul>
-				<li>Last Published: {{blog.build_date}}</li>
+				<li>Blog Last Updated: {{article.blog.build_date}}</li>
 			</ul>
 		{% endif %}
+		<h3>{{article.title}}</h3>
+		<ul>
+			<li>{{article.publish_date}}</li>
+		</ul>
+		{% if article.description != None %}
+			<p>Description: {{article.description}}</p>
+		{% else %}
+			<p> Content: {{article.content}}</p>
+		{% endif %}
+		<h3></h3>
+		<br>
 	{% endfor %}
 	
 {% endblock %}
