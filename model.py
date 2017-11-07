@@ -8,12 +8,9 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-# Is this what I do?
-
-
-
 ##############################################################################
 # Model definitions
+
 
 class User(db.Model):
     """Users of my website."""
@@ -40,7 +37,7 @@ class Blog(db.Model):
     blog_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     rss_url = db.Column(db.String(200), nullable=False)
-    build_date = db.Column(db.DateTime, nullable=False)
+    build_date = db.Column(db.String(200), nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -54,13 +51,13 @@ class Article(db.Model):
     __tablename__ = "articles"
 
     article_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    blog_id = db.Column(db.Integer, db.ForeignKey('Blog.blog_id'))
-    title = db.Column(db.String(50), nullable=False)
-    activity = db.Column(db.Boolean, default=True)
-    url = db.Column(db.String(200), nullable=False)
-    description = db.Column(db.String(30), nullable=False)
-    content = db.Column(db.String(30), nullable=False)
+    blog_id = db.Column(db.Integer, db.ForeignKey('blogs.blog_id'))
+    title = db.Column(db.String(500), nullable=False)
     publish_date = db.Column(db.DateTime, nullable=False)
+    url = db.Column(db.String(500), nullable=False)
+    activity = db.Column(db.Boolean, default=True)
+    description = db.Column(db.String(50000), nullable=True)
+    content = db.Column(db.String(1000000), nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -74,21 +71,19 @@ class Favorite(db.Model):
     __tablename__ = "favorites"
 
     fav_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'))
-    article_id = db.Column(db.Integer, db.ForeignKey('Article.article_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    article_id = db.Column(db.Integer, db.ForeignKey('articles.article_id'))
 
     # Define relationship to user
-    user = db.relationship("User", backref=
-                           db.backref("Favorite", user_id=user_id))
+    user = db.relationship("User", backref='favorites')
 
     # Define relationship to article
-    article = db.relationship("Article", backref=
-                              db.backref("Favorite", article_id=article_id))
+    article = db.relationship("Article", backref='favorites')
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Favorite article: {}>".format(article.title)
+        return "<Favorite article: {}>".format(self.article.title)
 
 
 class User_blog(db.Model):
@@ -97,31 +92,30 @@ class User_blog(db.Model):
     __tablename__ = "user_blogs"
 
     user_blog_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'))
-    blog_id = db.Column(db.Integer, db.ForeignKey('Blog.blog_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    blog_id = db.Column(db.Integer, db.ForeignKey('blogs.blog_id'))
 
     # Define relationship to user
-    user = db.relationship("User", backref=
-                           db.backref("Favorite", user_id=user_id))
+    user = db.relationship("User", backref='user_blogs')
+
 
     # Define relationship to blog
-    blog = db.relationship("Blog", backref=
-                           db.backref("Favorite", blog_id=blog_id))
+    blog = db.relationship("Blog", backref='user_blogs')
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Blog_user User: {} Blog: {}>".format(user.name, blog.title)
+        return "<Blog_user User: {} Blog: {}>".format(self.user.name, self.blog.title)
 
 
 ##############################################################################
 # Helper functions
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri):
     """Connect the database to our Flask app."""
 
     # Configure to use our PostgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///projectdb'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_ECHO'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
@@ -136,5 +130,4 @@ if __name__ == "__main__":
     from flask import Flask
     app = Flask(__name__)
 
-    connect_to_db(app)
-    print "Connected to DB."
+    connect_to_db(app, 'postgresql:///projectdb')
