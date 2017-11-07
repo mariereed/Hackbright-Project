@@ -31,7 +31,11 @@ def my_function():
         response = requests.get(blog)
 
         # Create the namespace
-        namespace = dict([node for _, node in ET.iterparse(StringIO(response.text), events=['start-ns'])])
+        namespace = dict(
+            [node for _, node in ET.iterparse(
+                StringIO(response.text), events=['start-ns']
+                )]
+            )
 
         # Parse as element
         root = ET.fromstring(response.text)
@@ -77,8 +81,8 @@ def my_function():
             article = title
 
             # ADD CONTENT!
-            if content_obj:
-                content = content_obj.text()
+            if content_obj is not None:
+                content = content_obj.text
                 article = Article(blog_id=blog.blog_id, title=title, activity=True,
                                   url=url, description=description, content=content,
                                   publish_date=publish_date)
