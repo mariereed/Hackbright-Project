@@ -2,5 +2,15 @@
 
 {% block content %}
 	<h1>OMG is that myyyyy data?!</h1>
-	{{ blog.name }}
+	<br>
+	{% for blog in blogs %}
+
+		<h2>Blog Title: {{blog.name}}</h2>
+		{% if blog.build_date != None %}
+			<ul>
+				<li>Last Published: {{blog.build_date}}</li>
+			</ul>
+		{% endif %}
+	{% endfor %}
+	
 {% endblock %}

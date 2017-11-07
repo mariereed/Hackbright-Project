@@ -50,7 +50,7 @@ def my_function():
             name = root.find('.//title').text
             rss_url = root.find('.//link').text
 
-            if root.find('.//lastBuildDate'):
+            if root.find('.//lastBuildDate') is not None:
                 build_date = root.find('.//lastBuildDate').text
                 # if what 2 wear.. build_date = ?
                 blog = Blog(name=name, rss_url=rss_url, build_date=build_date)

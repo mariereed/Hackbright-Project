@@ -31,9 +31,10 @@ def display_some_data():
     """ The purpose of this page is to show that data can
     be displayed from projectdb."""
 
-    blog = Blog.query.filter(Blog.name == 'Mr. Money Mustache').first()
+    blogs = Blog.query.all()
+    articles = Article.query.all()
 
-    render_template('data.html', blog=blog)
+    return render_template('data.html', blogs=blogs, articles=articles)
 
 
 # -------- The following is a route template --------------------
