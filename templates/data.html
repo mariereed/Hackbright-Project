@@ -3,6 +3,7 @@
 {% block content %}
 	<h1>OMG is that myyyyy data?!</h1>
 	<br>
+	<img src="https://www.daysoftheyear.com/wp-content/images/happy-cat-month-1-e1472814679231.jpg" alt="Happy Cat" height="400" width="800">
 	{% for article in articles %}
 		<h2>{{article.blog.name}}</h2>
 		{% if article.blog.build_date != None %}
@@ -12,7 +13,7 @@
 		{% endif %}
 		<h3>{{article.title}}</h3>
 		<ul>
-			<li>{{article.publish_date}}</li>
+			<li>Published: {{article.publish_date}}</li>
 		</ul>
 		{% if article.description != None %}
 			<p>Description: {{article.description}}</p>
