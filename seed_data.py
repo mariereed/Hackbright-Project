@@ -72,9 +72,23 @@ def find_tag(node, tag):
     """Takes in a node (ie: root) and an element tag, returns the text."""
 
     if tag == 'link':
-        # Is there a way I can wrap this up,
-        # so I don't have to do lines 3-4 of create_value_dict()?
-        return find_correct_link(node)
+        links = find_all(node, 'link')
+
+        # If links[0] has no attributes
+        if not links[0].get():
+            # Follow the else statement below
+            if is_normal():
+                search_for = './/{}'.format(tag)
+            else:
+                search_for = normalize_tag(tag)
+
+            return node.find(search_for).text
+
+        for link in links:
+            if link.get('rel') == "alternate":
+                correct_link = link.get('href')
+                return correct_link
+
     else:
         if is_normal():
             search_for = './/{}'.format(tag)
@@ -108,10 +122,20 @@ def create_value_dict(node):
             if content_obj is not None:
                 tag_values[attrib] = content_obj.text
 
-        if find_tag(node, desired_tag[attrib]) is not None:
-            tag_values[attrib] = find_tag(node, desired_tag[attrib]).text
+
+        if type(desired_tag[attrib]) is 'list':
+            for i in range(len(desired_tag[attrib])):
+                if find_tag(node, desired_tag[attrib][i]) is not None:
+                    tag_values[attrib] = find_tag(node, desired_tag[attrib][i]).text
+
+            # If for loop completes and still no value for attrib, then set to none
+            if not tag_values.get(attrib):
+                    tag_values[attrib] = None
         else:
-            tag_values[attrib] = None
+            if find_tag(node, desired_tag[attrib]) is not None:
+                tag_values[attrib] = find_tag(node, desired_tag[attrib]).text
+            else:
+                tag_values[attrib] = None
 
     return tag_values
 
@@ -136,11 +160,15 @@ def find_all(node, tag):
     return node.findall(search_for)
 
 
-def find_correct_link(node):
-    links = find_all(node, 'link')
-    for link in links:
-        if link.get('rel') == "alternate":
-            return link.get('href')
+def find_entry_tag():
+    """Determines the name of the item or entry in the xml file. Returns the correct tag name."""
+
+    if find_all(root, 'item') is not None:
+        tag = 'item'
+    if find_all(root, 'entry') is not None:
+        tag = 'entry'
+
+    return tag
 
 
 def seed_data():
@@ -152,38 +180,34 @@ def seed_data():
         root = create_root(response)
         namespace = create_namespace(response)
 
-        desired_tag = {'name': 'title', 'rss_url': 'link', 'build_date': 'lastBuildDate'}
-        create_value_dict(root)
+        # For the blog
+        desired_tag = {'name': 'title', 'rss_url': 'link', 'build_date': ['lastBuildDate', 'published']}
+        tag_values = create_value_dict(root)
 
-        blog = Blog(name=desired_tag['name'],
-                    rss_url=desired_tag['rss_url'],
-                    build_date=desired_tag['build_date'])
+        blog = Blog(name=tag_values['name'],
+                    rss_url=tag_values['rss_url'],
+                    build_date=tag_values['build_date'])
 
         add_and_commit(blog)
 
-        items = find_all(root, 'item')
+        # For the article
+        items = find_all(root, find_entry_tag())
         first_article = items[0]
 
-        desired_tag = {'title': 'title', 'url': 'link', 'publish_date': 'pubDate', 'description': 'description', 'content': 'content'}
-        create_value_dict(first_article)
+        desired_tag = {'title': 'title', 'url': 'link', 'publish_date': ['pubDate', 'published'],
+                       'description': 'description', 'content': 'content'}
+
+        tag_values = create_value_dict(first_article)
         article = find_tag(first_article, 'title').text
 
         article = Article(blog_id=blog.blog_id,
-                          title=desired_tag['title'],
+                          title=tag_values['title'],
                           activity=True,
-                          url=desired_tag['url'],
-                          description=desired_tag['description'],
-                          publish_date=desired_tag['publish_date'])
+                          url=tag_values['url'],
+                          description=tag_values['description'],
+                          publish_date=tag_values['publish_date'])
 
         add_and_commit(article)
-
-        """
-        In what2wear:
-        The build_date is called 'updated',
-        the item is called 'entry',
-        the publish_date is called 'published'
-
-        """
 
 
 # ----------------------------------------------------
