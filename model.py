@@ -38,6 +38,7 @@ class Blog(db.Model):
     blog_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     rss_url = db.Column(db.String(200), nullable=False)
+    blog_url = db.Column(db.String(200), nullable=False)
     build_date = db.Column(db.String(200), nullable=True)
 
     def __repr__(self):

@@ -65,8 +65,13 @@ def find_tag(node, tag, namespace):
 
     if tag == 'link':
         links = find_all(node, 'link', namespace)
+        print links
+        print node
+        print tag
+        print namespace
+        """For some reason for w2w this links is evalutating to an empty list"""
 
-        # If links[0] has no attributes
+        # If links[0] has no attribute 'rel'
         if not links[0].get('rel'):
             # Follow the else statement below
             if is_normal(node):
@@ -91,7 +96,7 @@ def find_tag(node, tag, namespace):
 
 
 def is_normal(node):
-    if node.find('.//') is not None:
+    if node.find('.//title') is not None:
         return True
     else:
         return False
@@ -103,7 +108,7 @@ def create_value_dict(node, desired_tag, namespace):
     tag_values = {}
 
     for attrib in desired_tag:
-        if attrib == 'rss_url' or attrib == 'url':
+        if attrib == 'blog_url' or attrib == 'url':
             # Don't want .text because it is already a string
             tag_values[attrib] = find_tag(node, desired_tag[attrib], namespace)
             # Don't do below, return to loop
@@ -161,7 +166,7 @@ def find_entry_tag(node, namespace):
     return tag
 
 
-desired_tag = {'name': 'title', 'rss_url': 'link', 'build_date': ['lastBuildDate', 'published'],
+desired_tag = {'name': 'title', 'blog_url': 'link', 'build_date': ['lastBuildDate', 'updated'],
                        'title': 'title', 'url': 'link', 'publish_date': ['pubDate', 'published'],
                        'description': 'description', 'content': 'content'}
 
@@ -169,14 +174,10 @@ desired_tag = {'name': 'title', 'rss_url': 'link', 'build_date': ['lastBuildDate
 def seed_blog(blog, root, namespace):
 
     tag_values = create_value_dict(root, desired_tag, namespace)
-    print
-    print root
-    print desired_tag
-    print tag_values
-    print namespace
-    print
+
     blog = Blog(name=tag_values['name'],
-                rss_url=tag_values['rss_url'],
+                rss_url=blog,
+                blog_url=tag_values['blog_url'],
                 build_date=tag_values['build_date'])
 
     add_and_commit(blog)
@@ -187,8 +188,7 @@ def seed_blog(blog, root, namespace):
 def seed_article(blog, root, namespace):
 
     items = find_all(root, find_entry_tag(root, namespace), namespace)
-    print find_entry_tag(root, namespace)
-    print items
+
     first_article = items[0]
 
     tag_values = create_value_dict(first_article, desired_tag, namespace)
@@ -210,10 +210,9 @@ def seed_data():
 
     blog_rss_urls = ["http://feeds.feedburner.com/StudyHacks?format=xml",
                      "http://feeds2.feedburner.com/PsychologyBlog?format=xml",
-                     "https://www.desmogblog.com/rss.xml"]
-
-    "http://feeds.feedburner.com/MrMoneyMustache?format=xml"
-    "http://feeds.feedburner.com/readytwowear?format=xml"
+                     "https://www.desmogblog.com/rss.xml",
+                     "http://feeds.feedburner.com/MrMoneyMustache?format=xml",
+                     "http://feeds.feedburner.com/readytwowear?format=xml"]
 
     for blog in blog_rss_urls:
 
