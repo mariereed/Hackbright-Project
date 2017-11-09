@@ -49,14 +49,18 @@ def create_namespace(response):
     return namespace
 
 
-def normalize_tag(tag, namespace):
+def normalize_tag(tag, namespace, key=None):
     """When a blog parses oddly and requires special formatting,
     this is one of the solutions. Returns the formatted root.find.
     Should be used in another function to find at specific node.
     """
+    if key is None:
+        insert = "{" + "{}".format(namespace['']) + "}"
+    else:
+        insert = "{" + "{}".format(namespace[key]) + "}"
 
-    insert = "{" + "{}".format(namespace['']) + "}"
-    search_for = insert + tag
+    base = './/'
+    search_for = base + insert + tag
     return search_for
 
 
@@ -65,10 +69,7 @@ def find_tag(node, tag, namespace):
 
     if tag == 'link':
         links = find_all(node, 'link', namespace)
-        print links
-        print node
-        print tag
-        print namespace
+
         """For some reason for w2w this links is evalutating to an empty list"""
 
         # If links[0] has no attribute 'rel'
@@ -112,17 +113,23 @@ def create_value_dict(node, desired_tag, namespace):
             # Don't want .text because it is already a string
             tag_values[attrib] = find_tag(node, desired_tag[attrib], namespace)
             # Don't do below, return to loop
-
         elif attrib == 'content':
-            content_obj = node.find('content:encoded', namespace)
-            if content_obj is not None:
-                tag_values[attrib] = content_obj.text
-
+            if namespace.get(attrib):
+                content_obj = node.find(normalize_tag('encoded', namespace, key=attrib))
+                if content_obj is not None:
+                    tag_values[attrib] = content_obj.text
+                else:
+                    tag_values[attrib] = None
+            else:
+                content = find_tag(node, desired_tag[attrib], namespace)
+                if content is None:
+                    tag_values[attrib] = None
+                else:
+                    tag_values[attrib] = content.text
         elif type(desired_tag[attrib]) == list:
             for i in range(len(desired_tag[attrib])):
                 if find_tag(node, desired_tag[attrib][i], namespace) is not None:
                     tag_values[attrib] = find_tag(node, desired_tag[attrib][i], namespace).text
-
             # If for loop completes and still no value for attrib, then set to none
             if not tag_values.get(attrib):
                     tag_values[attrib] = None
@@ -200,7 +207,8 @@ def seed_article(blog, root, namespace):
                       activity=True,
                       url=tag_values['url'],
                       description=tag_values['description'],
-                      publish_date=tag_values['publish_date'])
+                      publish_date=tag_values['publish_date'],
+                      content=tag_values['content'])
 
     add_and_commit(article)
 
