@@ -7,6 +7,46 @@ from io import StringIO
 import requests
 import sys
 from server import app
+from bs4 import BeautifulSoup
+from bs4.element import Comment
+
+
+def content_tag_visible(element):
+    # If it is not one of my desired tags
+    if element.parent.name not in ['content',
+                                   'content:encoded',
+                                   ]:
+        return False
+    # If it is a comment
+    if isinstance(element, Comment):
+        return False
+    return True
+
+
+def description_tag_visible(element):
+    # If it is not one of my desired tags
+    if element.parent.name not in ['description']:
+        return False
+    # If it is a comment
+    if isinstance(element, Comment):
+        return False
+    return True
+
+
+def tag_visible(element):
+    """This is the generic template."""
+    if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
+        return False
+    if isinstance(element, Comment):
+        return False
+    return True
+
+
+def text_from_html(body, tag_vis_funct):
+    soup = BeautifulSoup(body, 'html.parser')
+    texts = soup.findAll(text=True)
+    visible_texts = filter(tag_vis_funct, texts)
+    return " ".join(t.strip() for t in visible_texts)
 
 
 def prep_for_seed():
@@ -103,6 +143,59 @@ def is_normal(node):
         return False
 
 
+# def get_name(node):
+#     """ """
+
+#     pass
+
+
+# def get_blog_url(node):
+#     """ """
+
+#     pass
+
+
+# def get_build_date(node):
+#     """ """
+
+#     pass
+
+
+# def get_title(node):
+#     """ """
+
+#     pass
+
+
+# def get_url(node):
+#     """ """
+
+#     pass
+
+
+# def get_publish_date(node):
+#     """ """
+
+#     pass
+
+
+# def get_description(node):
+#     """ """
+
+#     pass
+
+
+# def get_content(node):
+#     """ """
+
+#     pass
+
+
+desired_tag = {'name': 'title', 'blog_url': 'link', 'build_date': ['lastBuildDate', 'updated'],
+                       'title': 'title', 'url': 'link', 'publish_date': ['pubDate', 'published'],
+                       'description': 'description', 'content': 'content'}
+
+
 def create_value_dict(node, desired_tag, namespace):
     """Creates a attrib-value dictionary for instantiating each instance object."""
 
@@ -117,7 +210,9 @@ def create_value_dict(node, desired_tag, namespace):
             if namespace.get(attrib):
                 content_obj = node.find(normalize_tag('encoded', namespace, key=attrib))
                 if content_obj is not None:
-                    tag_values[attrib] = content_obj.text
+                    # tag_values[attrib] = content_obj.text
+                    stuff = text_from_html(content_obj.text, content_tag_visible)
+                    tag_values[attrib] = stuff
                 else:
                     tag_values[attrib] = None
             else:
@@ -125,7 +220,9 @@ def create_value_dict(node, desired_tag, namespace):
                 if content is None:
                     tag_values[attrib] = None
                 else:
-                    tag_values[attrib] = content.text
+                    stuff = text_from_html(content.text, content_tag_visible)
+                    # tag_values[attrib] = content.text
+                    tag_values[attrib] = stuff
         elif type(desired_tag[attrib]) == list:
             for i in range(len(desired_tag[attrib])):
                 if find_tag(node, desired_tag[attrib][i], namespace) is not None:
@@ -135,7 +232,27 @@ def create_value_dict(node, desired_tag, namespace):
                     tag_values[attrib] = None
         else:
             if find_tag(node, desired_tag[attrib], namespace) is not None:
-                tag_values[attrib] = find_tag(node, desired_tag[attrib], namespace).text
+
+                if attrib == 'description':
+                    print
+                    print
+                    print attrib
+                    print tag_values.get(attrib)
+                    print
+                    print tag_values
+                    print
+                    print find_tag(node, desired_tag[attrib], namespace)
+                    print
+                    print find_tag(node, desired_tag[attrib], namespace).text
+                    print
+                    print text_from_html(find_tag(node, desired_tag[attrib], namespace).text, description_tag_visible)
+                    stuff = text_from_html(find_tag(node, desired_tag[attrib], namespace).text, description_tag_visible)
+                    tag_values[attrib] = stuff
+                    print
+                    print tag_values
+                    print
+                else:
+                    tag_values[attrib] = find_tag(node, desired_tag[attrib], namespace).text
             else:
                 tag_values[attrib] = None
 
@@ -171,11 +288,6 @@ def find_entry_tag(node, namespace):
         tag = 'entry'
 
     return tag
-
-
-desired_tag = {'name': 'title', 'blog_url': 'link', 'build_date': ['lastBuildDate', 'updated'],
-                       'title': 'title', 'url': 'link', 'publish_date': ['pubDate', 'published'],
-                       'description': 'description', 'content': 'content'}
 
 
 def seed_blog(blog, root, namespace):
@@ -218,9 +330,10 @@ def seed_data():
 
     blog_rss_urls = ["http://feeds.feedburner.com/StudyHacks?format=xml",
                      "http://feeds2.feedburner.com/PsychologyBlog?format=xml",
-                     "https://www.desmogblog.com/rss.xml",
                      "http://feeds.feedburner.com/MrMoneyMustache?format=xml",
                      "http://feeds.feedburner.com/readytwowear?format=xml"]
+
+    # "https://www.desmogblog.com/rss.xml",
 
     for blog in blog_rss_urls:
 
