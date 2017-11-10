@@ -196,6 +196,19 @@ desired_tag = {'name': 'title', 'blog_url': 'link', 'build_date': ['lastBuildDat
                        'description': 'description', 'content': 'content'}
 
 
+def add_element_tag(node, tag_attrib, string, namespace):
+    """Adds the appropriate element tags onto the text string for use with BeautifulSoup."""
+
+    my_tag = find_tag(node, desired_tag[tag_attrib], namespace).tag
+
+    open_tag = "<" + my_tag + ">"
+    close_tag = "</" + my_tag + ">"
+
+    result = open_tag + string + close_tag
+
+    return result
+
+
 def create_value_dict(node, desired_tag, namespace):
     """Creates a attrib-value dictionary for instantiating each instance object."""
 
