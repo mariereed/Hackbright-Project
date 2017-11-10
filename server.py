@@ -26,6 +26,7 @@ def homepage():
 
     return render_template('homepage.html')
 
+
 @app.route('/data')
 def display_some_data():
     """ The purpose of this page is to show that data can
@@ -35,6 +36,13 @@ def display_some_data():
     articles = Article.query.all()
 
     return render_template('data.html', blogs=blogs, articles=articles)
+
+
+@app.route('/content')
+def test_the_content():
+    """ Testing route to see if content displays properly."""
+
+    return render_template('thing8.html')
 
 
 # -------- The following is a route template --------------------
