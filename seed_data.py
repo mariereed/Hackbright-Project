@@ -209,6 +209,19 @@ def add_element_tag(node, tag_attrib, string, namespace):
     return result
 
 
+def ce_add_element_tag(node, attrib, string, namespace):
+    """Adds the appropriate element tags onto the text string for use with BeautifulSoup."""
+
+    my_tag = node.find(normalize_tag('encoded', namespace, key=attrib)).tag
+
+    open_tag = "<" + my_tag + ">"
+    close_tag = "</" + my_tag + ">"
+
+    result = open_tag + string + close_tag
+
+    return result
+
+
 def create_value_dict(node, desired_tag, namespace):
     """Creates a attrib-value dictionary for instantiating each instance object."""
 
@@ -222,9 +235,10 @@ def create_value_dict(node, desired_tag, namespace):
         elif attrib == 'content':
             if namespace.get(attrib):
                 content_obj = node.find(normalize_tag('encoded', namespace, key=attrib))
-                if content_obj is not None:
+                if content_obj is not None and node.tag in ['entry', 'item']:
                     # tag_values[attrib] = content_obj.text
-                    stuff = text_from_html(content_obj.text, content_tag_visible)
+                    mod_string = ce_add_element_tag(node, attrib, content_obj.text, namespace)
+                    stuff = text_from_html(mod_string, content_tag_visible)
                     tag_values[attrib] = stuff
                 else:
                     tag_values[attrib] = None
@@ -233,7 +247,8 @@ def create_value_dict(node, desired_tag, namespace):
                 if content is None:
                     tag_values[attrib] = None
                 else:
-                    stuff = text_from_html(content.text, content_tag_visible)
+                    mod_string = add_element_tag(node, attrib, content.text, namespace)
+                    stuff = text_from_html(mod_string, content_tag_visible)
                     # tag_values[attrib] = content.text
                     tag_values[attrib] = stuff
         elif type(desired_tag[attrib]) == list:
@@ -244,26 +259,12 @@ def create_value_dict(node, desired_tag, namespace):
             if not tag_values.get(attrib):
                     tag_values[attrib] = None
         else:
-            if find_tag(node, desired_tag[attrib], namespace) is not None:
-
+            description = find_tag(node, desired_tag[attrib], namespace)
+            if description is not None:
                 if attrib == 'description':
-                    print
-                    print
-                    print attrib
-                    print tag_values.get(attrib)
-                    print
-                    print tag_values
-                    print
-                    print find_tag(node, desired_tag[attrib], namespace)
-                    print
-                    print find_tag(node, desired_tag[attrib], namespace).text
-                    print
-                    print text_from_html(find_tag(node, desired_tag[attrib], namespace).text, description_tag_visible)
-                    stuff = text_from_html(find_tag(node, desired_tag[attrib], namespace).text, description_tag_visible)
+                    mod_string = add_element_tag(node, attrib, description.text, namespace)
+                    stuff = text_from_html(mod_string, description_tag_visible)
                     tag_values[attrib] = stuff
-                    print
-                    print tag_values
-                    print
                 else:
                     tag_values[attrib] = find_tag(node, desired_tag[attrib], namespace).text
             else:
@@ -342,11 +343,10 @@ def seed_data():
     """Actually seed the data. """
 
     blog_rss_urls = ["http://feeds.feedburner.com/StudyHacks?format=xml",
+                     "https://www.desmogblog.com/rss.xml",
                      "http://feeds2.feedburner.com/PsychologyBlog?format=xml",
                      "http://feeds.feedburner.com/MrMoneyMustache?format=xml",
                      "http://feeds.feedburner.com/readytwowear?format=xml"]
-
-    # "https://www.desmogblog.com/rss.xml",
 
     for blog in blog_rss_urls:
 
