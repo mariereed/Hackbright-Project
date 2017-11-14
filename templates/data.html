@@ -17,7 +17,8 @@
 		</ul>
 		{% if article.description != None %}
 			<p>Description: {{article.description}}</p>
-		{% else %}
+		{% endif %}
+		{% if article.content != None %}
 			<p> Content: {{article.content}}</p>
 		{% endif %}
 		<h3></h3>

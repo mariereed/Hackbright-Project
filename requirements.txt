@@ -1,7 +1,9 @@
 backports.shutil-get-terminal-size==1.0.0
+beautifulsoup4==4.6.0
 blinker==1.4
 certifi==2017.7.27.1
 chardet==3.0.4
+click==6.7
 decorator==4.1.2
 enum34==1.1.6
 Flask==0.10.1
@@ -17,7 +19,6 @@ oauthlib==2.0.6
 pathlib2==2.3.0
 pexpect==4.2.1
 pickleshare==0.7.4
-pkg-resources==0.0.0
 prompt-toolkit==1.0.15
 psycopg2==2.6.1
 ptyprocess==0.5.2
@@ -29,7 +30,8 @@ simplegeneric==0.8.1
 six==1.11.0
 SQLAlchemy==1.0.12
 traitlets==4.3.2
+untangle==1.1.1
 urllib3==1.22
-virtualenv==15.1.0
+virtualenv==15.0.1
 wcwidth==0.1.7
 Werkzeug==0.11.9
