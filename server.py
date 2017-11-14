@@ -7,7 +7,7 @@ import requests
 import sys
 from model import User, Blog, User_blog, Favorite, Article, connect_to_db, db
 from bs import beautify
-# import bs
+# from seed_data import
 
 # -------- Set Up ----------------------------------------------
 app = Flask(__name__)
@@ -28,6 +28,21 @@ def homepage():
 
     return render_template('homepage.html')
 
+
+@app.route('/login')
+def login():
+    """ Login page."""
+
+    return render_template('login.html')
+
+
+@app.route('/register')
+def register():
+    """ Registration page."""
+
+    return render_template('register.html')
+
+
 @app.route('/data')
 def display_some_data():
     """ The purpose of this page is to show that data can
@@ -38,6 +53,7 @@ def display_some_data():
 
     return render_template('data.html', blogs=blogs, articles=articles)
 
+
 @app.route('/formatted_data')
 def display_formatted_data():
     """ The purpose of this page is to test that formatted data displays."""
@@ -46,9 +62,10 @@ def display_formatted_data():
 
     formatted_art = [{'content': str(beautify(article.content or '')),
                       'description': str(beautify(article.description or '')),
-                      'db_info':article} for article in articles]
+                      'db_info': article} for article in articles]
 
     return render_template('data2.html', formatted_art=formatted_art)
+
 
 # I am not using this... but leaving it for reference.
 # @app.route('/return_content.json')
@@ -63,6 +80,7 @@ def display_formatted_data():
 
 #     return jsonify(new_content)
 
+
 @app.route('/timeline')
 def display_timeline():
     """Display the timeline with truncated texts and no images."""
@@ -71,7 +89,7 @@ def display_timeline():
 
     formatted_art = [{'content': str(beautify(article.content or '')),
                       'description': str(beautify(article.description or '')),
-                      'db_info':article} for article in articles]
+                      'db_info': article} for article in articles]
 
     return render_template('timeline.html', formatted_art=formatted_art)
 
