@@ -4,13 +4,7 @@
 
 {% block content %}
 
-	{% if article.blog.build_date != None %}
-		<ul>
-			<li>Blog Last Updated: {{article.blog.build_date}}</li>
-		</ul>
-	{% endif %}
-	
-		<h3>{{article.title}}</h3>
+		<h1>{{article.title}}</h3>
 		<ul>
 			<li>Published: {{article.publish_date}}</li>
 		</ul>
