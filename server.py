@@ -38,18 +38,17 @@ def display_some_data():
 
     return render_template('data.html', blogs=blogs, articles=articles)
 
-@app.route('/formated_data')
-def display_formated_data():
+@app.route('/formatted_data')
+def display_formatted_data():
     """ The purpose of this page is to test that formatted data displays."""
 
     articles = Article.query.all()
-    article_1 = articles[0]
 
-    # do stuff to it, then reassign to variables
-    new_content = str(beautify(article_1.content))
+    formatted_art = [{'content': str(beautify(article.content or '')),
+                      'description': str(beautify(article.description or '')),
+                      'db_info':article} for article in articles]
 
-
-    return render_template('data2.html', new_content=new_content, article_1=article_1)
+    return render_template('data2.html', formatted_art=formatted_art)
 
 @app.route('/return_content.json')
 def return_json():

@@ -6,7 +6,7 @@ def beautify(string):
 
     soup = BeautifulSoup(string, 'html.parser')
 
-    for script in soup(["script", "style", "a"]):
+    for script in soup(["script", "style"]):
         # If I leave in the "a" it gets some of the links... it i take it out.. i get duplicates.
             script.extract()
 

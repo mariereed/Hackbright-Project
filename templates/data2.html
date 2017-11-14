@@ -1,29 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}My Data{% endblock %}
 {% block content %}
-	<h1>Formatted Data for {{article_1.blog.name}}</h1>
-	{% if article_1.blog.build_date != None %}
-		<ul>
-			<li>Blog Last Updated: {{article_1.blog.build_date}}</li>
-		</ul>
-		{% endif %}
-		<h3>{{article_1.title}}</h3>
-		<ul>
-			<li>Published: {{article_1.publish_date}}</li>
-		</ul>
-		{% if article_1.description != None %}
-			<p>Description: {{article_1.description}}</p>
-		{% endif %}
-		{% if new_content != None %}
-			<p> Content: <div id="content"> {{new_content}}</div></p>
-		{% endif %}
-		<h3></h3>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-	<script>
-		$.get('/return_content.json', showContent)
-
-		function showContent(results) {
-			$('#content').html(results['content']);
-		}
-	</script>
+	{% for article in formatted_art %}
+		<h1>Formatted Data for {{article['db_info'].blog.name}}</h1>
+		{% if article['db_info'].blog.build_date != None %}
+			<ul>
+				<li>Blog Last Updated: {{article['db_info'].blog.build_date}}</li>
+			</ul>
+			{% endif %}
+			<h3>{{article['db_info'].title}}</h3>
+			<ul>
+				<li>Published: {{article['db_info'].publish_date}}</li>
+			</ul>
+			{% if article['db_info'].description %}
+				<p>Description: {{article['description']|safe}}</p>
+			{% endif %}
+			{% if article['content'] %}
+				<!-- |safe means override and allow it to be HTML instead of a string -->
+				<p> Content: <div id="content"> {{article['content']|safe}}</div></p>
+			{% endif %}
+	{% endfor %}
 {% endblock %}
