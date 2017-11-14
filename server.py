@@ -7,6 +7,8 @@ import requests
 import sys
 from model import User, Blog, User_blog, Favorite, Article, connect_to_db, db
 from bs import beautify
+from datetime import datetime
+
 # from seed_data import
 
 # -------- Set Up ----------------------------------------------
@@ -20,6 +22,19 @@ app.jinja_env.undefined = StrictUndefined
 
 
 # -------- Routes ----------------------------------------------
+
+
+def create_test_user():
+    """ Create a user instance and add to db."""
+
+    test_user = User(name="Marie",
+                     email="me@marie.com",
+                     password="groot",
+                     user_since=(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                     )
+
+    db.session.add(test_user)
+    db.session.commit()
 
 
 @app.route('/')
@@ -62,6 +77,7 @@ def register():
     """ Registration page."""
 
     return render_template('register.html')
+
 
 @app.route('/users/<user_id>')
 def display_user_details():
