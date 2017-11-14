@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}My Timeline{% endblock %}
+
+{% block content %}
+
+	{% for article in formatted_art %}
+		<h1>{{article['db_info'].blog.name}}</h1>
+		{% endif %}
+		<h3>{{article['db_info'].title}}</h3>
+		<!-- INSERT LINK TO DETAILS PAGE -->
+		<ul>
+			<li>Published: {{article['db_info'].publish_date}}</li>
+		</ul>
+
+		{% if article['db_info'].description %}
+			<p>Description: {{article['description']|safe}}</p>
+		{% elif article['content'] %}
+			<!-- |safe means override and allow it to be HTML instead of a string -->
+			<p> Content: <div id="content"> {{article['content']|safe}}</div></p>
+		{% endif %}
+
+	{% endfor %}
+
+{% endblock %}

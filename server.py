@@ -50,17 +50,43 @@ def display_formatted_data():
 
     return render_template('data2.html', formatted_art=formatted_art)
 
-@app.route('/return_content.json')
-def return_json():
+# I am not using this... but leaving it for reference.
+# @app.route('/return_content.json')
+# def return_json():
+
+#     articles = Article.query.all()
+#     article_1 = articles[3]
+
+#     new_string = str(beautify(article_1.content))
+
+#     new_content = {'content': new_string}
+
+#     return jsonify(new_content)
+
+@app.route('/timeline')
+def display_timeline():
+    """Display the timeline with truncated texts and no images."""
 
     articles = Article.query.all()
-    article_1 = articles[3]
 
-    new_string = str(beautify(article_1.content))
+    formatted_art = [{'content': str(beautify(article.content or '')),
+                      'description': str(beautify(article.description or '')),
+                      'db_info':article} for article in articles]
 
-    new_content = {'content': new_string}
+    return render_template('timeline.html', formatted_art=formatted_art)
 
-    return jsonify(new_content)
+
+@app.route('/articles/<article_id>')
+def display_article_details(article_id):
+    """Display full article content and additional links, information."""
+
+    article = Article.query.get(article_id)
+
+    formatted_art = {'content': str(beautify(article.content or '')),
+                     'description': str(beautify(article.description or ''))
+                     }
+
+    return render_template('article_details.html', article=article, formatted_art=formatted_art)
 
 @app.route('/test')
 def display_it():
