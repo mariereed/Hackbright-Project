@@ -36,11 +36,38 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/log_confirm', methods=["POST"])
+def log_confirm():
+    """Check whether email and password input matches database."""
+
+    new_email = request.form.get("email")
+    password = request.form.get("password")
+    check = User.query.filter(User.email == new_email).first()
+
+    if check:
+        if check.password == password:
+            session['user_id'] = check.user_id
+            flash('Logged In')
+            return redirect('/users/<{user_id}>'.format(user_id=check.user_id))
+        else:
+            flash('Incorrect login information')
+            return redirect('/login')
+    else:
+        flash('Incorrect login information')
+        return redirect('/login')
+
+
 @app.route('/register')
 def register():
     """ Registration page."""
 
     return render_template('register.html')
+
+@app.route('/users/<user_id>')
+def display_user_details():
+    """ This page displays the user's details."""
+
+    return render_template('user_details.html')
 
 
 @app.route('/data')
