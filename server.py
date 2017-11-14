@@ -24,19 +24,6 @@ app.jinja_env.undefined = StrictUndefined
 # -------- Routes ----------------------------------------------
 
 
-def create_test_user():
-    """ Create a user instance and add to db."""
-
-    test_user = User(name="Marie",
-                     email="me@marie.com",
-                     password="groot",
-                     user_since=(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                     )
-
-    db.session.add(test_user)
-    db.session.commit()
-
-
 @app.route('/')
 def homepage():
     """ My homepage."""
@@ -55,21 +42,48 @@ def login():
 def log_confirm():
     """Check whether email and password input matches database."""
 
-    new_email = request.form.get("email")
+    email = request.form.get("email")
     password = request.form.get("password")
-    check = User.query.filter(User.email == new_email).first()
+    check = User.query.filter(User.email == email).first()
 
     if check:
         if check.password == password:
             session['user_id'] = check.user_id
             flash('Logged In')
-            return redirect('/users/<{user_id}>'.format(user_id=check.user_id))
+            return redirect('/users/{user_id}'.format(user_id=check.user_id))
         else:
             flash('Incorrect login information')
             return redirect('/login')
     else:
         flash('Incorrect login information')
         return redirect('/login')
+
+
+@app.route('/register_confirm', methods=["POST"])
+def register_confirm():
+    """ Allows users to register. Check to make sure they don't already exist."""
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+    name = request.form.get("name")
+    check = User.query.filter(User.email == email).first()
+
+    if check:
+        flash('{} already exists, please log in.'.format(email))
+        return redirect('/login')
+    else:
+        name = User(name=name,
+                         email=email,
+                         password=password,
+                         user_since=(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                         )
+
+        db.session.add(name)
+        db.session.commit()
+        flash('Thank you for registering {}'.format(name))
+        session['user_id'] = name.user_id
+        flash('Logged In')
+        return redirect('/users/{user_id}'.format(user_id=name.user_id))
 
 
 @app.route('/register')
@@ -80,10 +94,12 @@ def register():
 
 
 @app.route('/users/<user_id>')
-def display_user_details():
+def display_user_details(user_id):
     """ This page displays the user's details."""
 
-    return render_template('user_details.html')
+    user = User.query.filter(User.user_id == user_id).first()
+
+    return render_template('user_details.html', user=user)
 
 
 @app.route('/data')
