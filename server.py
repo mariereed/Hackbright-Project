@@ -31,7 +31,7 @@ def homepage():
 @app.route('/data')
 def display_some_data():
     """ The purpose of this page is to show that data can
-    be displayed from projectdb."""
+    be displayed from projectdb. It displays un-formatted raw data."""
 
     blogs = Blog.query.all()
     articles = Article.query.all()
@@ -88,13 +88,6 @@ def display_article_details(article_id):
 
     return render_template('article_details.html', article=article, formatted_art=formatted_art)
 
-@app.route('/test')
-def display_it():
-    return render_template('testy.html')
-
-@app.route('/test2')
-def display_it_2():
-    return render_template('testy2.html')
 
 # -------- The following is a route template --------------------
 
