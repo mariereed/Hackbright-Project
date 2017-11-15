@@ -2,7 +2,6 @@
 see if there are new articles, if there are it seeds them and updates the
 most recent in Blog."""
 
-from datetime import datetime
 from model import Article, Blog, db, connect_to_db
 from server import app
 from seed_data import get_response, create_root, create_namespace, find_all, find_entry_tag, find_tag, create_value_dict, desired_tag
@@ -11,7 +10,7 @@ from seed_data import get_response, create_root, create_namespace, find_all, fin
 def check_newest_date(blog, new_article_date):
     """ Checks to see if the article is new."""
 
-    if datetime.strptime(new_article_date, "%Y-%m-%d %H:%M:%S") > datetime.strptime(blog.most_recent, "%Y-%m-%d %H:%M:%S"):
+    if new_article_date > blog.most_recent:
         return True
     else:
         return False
