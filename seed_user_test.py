@@ -1,5 +1,5 @@
 from datetime import datetime
-from model import User, User_blog, db, connect_to_db
+from model import Blog, User, User_blog, db, connect_to_db
 from server import app
 
 
@@ -23,15 +23,6 @@ def follow_blogs(user_id, blog_id):
 
     db.session.add(connection)
     db.session.commit()
-
-
-def check_newest_date(blog_id, new_article_date):
-    """ Checks the db for the newest article publish date and sets it in blogs."""
-
-    blog = Blog.query.filter(Blog.blog_id == blog_id).first()
-
-    if datetime.strptime(new_article_date, "%Y-%m-%d %H:%M:%S") > datetime.strptime(blog.most_recent, "%Y-%m-%d %H:%M:%S"):
-        # add the new article into the database, set most recent to
 
 
 if __name__ == "__main__":
