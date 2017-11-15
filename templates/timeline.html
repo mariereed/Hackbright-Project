@@ -15,10 +15,10 @@
 		</ul>
 
 		{% if article['db_info'].description %}
-			<p>Description: {{article['description']|safe|truncate(700)}}</p>
+			<p>{{article['description']|safe|truncate(300, end='[...]')}}</p>
 		{% elif article['content'] %}
 			<!-- |safe means override and allow it to be HTML instead of a string -->
-			<p> Content: <div id="content"> {{article['content']|safe|truncate(700)}}</div></p>
+			<p><div id="content"> {{article['content']|safe|truncate(300, end='[...]')}}</div></p>
 		{% endif %}
 	{% endfor %}
 {% endblock %}

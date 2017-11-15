@@ -242,6 +242,6 @@ if __name__ == "__main__":
     connect_to_db(app, "postgresql:///projectdb")
 
     # In case tables haven't been created, create them
-    db.create_all()
-    prep_for_seed()
-    seed_data()
+    # db.create_all()
+    # prep_for_seed()
+    # seed_data()

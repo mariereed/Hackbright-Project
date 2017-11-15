@@ -5,6 +5,7 @@ from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Blog, User_blog, Favorite, Article, connect_to_db, db
 from bs import beautify
+from bs_old import text_from_html
 from datetime import datetime
 
 # -------- Set Up ----------------------------------------------
@@ -126,8 +127,8 @@ def display_timeline():
     articles = Article.query.order_by(Article.publish_date.desc()).all()
     # Here i need to order the articles by publish date
 
-    formatted_art = [{'content': str(beautify(article.content or '')),
-                      'description': str(beautify(article.description or '')),
+    formatted_art = [{'content': text_from_html(article.content or ''),
+                      'description': text_from_html(article.description or ''),
                       'db_info': article} for article in articles]
 
     return render_template('timeline.html', formatted_art=formatted_art)
