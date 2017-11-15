@@ -45,10 +45,12 @@ def seed_data():
                                   publish_date=tag_values['publish_date'],
                                   content=tag_values['content'])
                 db.session.add(article)
-                # UPDATE MOST_RECENT
-                this_blog.most_recent = tag_values['publish_date']
-                db.session.commit()
-            # ELSE: MOVE ON TO THE NEXT ONE
+                if item is items[0]:
+                    temp_most_recent = tag_values['publish_date']
+
+        # UPDATE MOST_RECENT, only to the newest article after all new articles are updated
+        this_blog.most_recent = temp_most_recent
+        db.session.commit()
 
 
 if __name__ == "__main__":
