@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}My Data{% endblock %}
 {% block content %}
-	<a href="/timeline">See the Timeline</a>
 	{% for article in formatted_art %}
 		<h1>Formatted Data for {{article['db_info'].blog.name}}</h1>
 		{% if article['db_info'].blog.build_date != None %}

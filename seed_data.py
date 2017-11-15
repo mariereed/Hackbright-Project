@@ -196,21 +196,24 @@ def seed_article(blog, root, namespace):
 
     items = find_all(root, find_entry_tag(root, namespace), namespace)
 
-    first_article = items[0]
+    # first_article = items[0]
 
-    tag_values = create_value_dict(first_article, desired_tag, namespace)
+    # Altering the seed_data to gather all the articles for each RSS feed
+    for item in items:
+        tag_values = create_value_dict(item, desired_tag, namespace)
+        if item is items[0]:
+            blog.most_recent = tag_values['publish_date']
+        article = find_tag(item, 'title', namespace).text
 
-    article = find_tag(first_article, 'title', namespace).text
+        article = Article(blog_id=blog.blog_id,
+                          title=tag_values['title'],
+                          activity=True,
+                          url=tag_values['url'],
+                          description=tag_values['description'],
+                          publish_date=tag_values['publish_date'],
+                          content=tag_values['content'])
 
-    article = Article(blog_id=blog.blog_id,
-                      title=tag_values['title'],
-                      activity=True,
-                      url=tag_values['url'],
-                      description=tag_values['description'],
-                      publish_date=tag_values['publish_date'],
-                      content=tag_values['content'])
-
-    add_and_commit(article)
+        add_and_commit(article)
 
 
 def seed_data():
@@ -229,7 +232,6 @@ def seed_data():
         namespace = create_namespace(response)
 
         blog = seed_blog(blog, root, namespace)
-
         seed_article(blog, root, namespace)
 
 

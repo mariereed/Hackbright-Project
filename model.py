@@ -40,6 +40,7 @@ class Blog(db.Model):
     rss_url = db.Column(db.String(200), nullable=False)
     blog_url = db.Column(db.String(200), nullable=False)
     build_date = db.Column(db.String(200), nullable=True)
+    most_recent = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
