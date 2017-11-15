@@ -1,4 +1,4 @@
-# Here i will put my tests.
+""" Here i will put my tests."""
 
 import unittest
 

@@ -3,7 +3,6 @@
 {% block title %}My Timeline{% endblock %}
 
 {% block content %}
-
 	{% for article in formatted_art %}
 		<h1>{{article['db_info'].blog.name}}</h1>
 		<h3>
@@ -21,7 +20,5 @@
 			<!-- |safe means override and allow it to be HTML instead of a string -->
 			<p> Content: <div id="content"> {{article['content']|safe|truncate(700)}}</div></p>
 		{% endif %}
-
 	{% endfor %}
-
 {% endblock %}

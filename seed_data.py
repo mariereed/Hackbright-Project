@@ -1,5 +1,5 @@
-# Use this file to add seed data to db
-# This should be run only once, if it is re-run then dropdb first
+""" The purpose of this file is to add seed data to the DB. This should be run only once,
+if it is re-run then the DB needs to be dropped and re-created first"""
 
 from model import Blog, Article, db, connect_to_db
 import xml.etree.ElementTree as ET

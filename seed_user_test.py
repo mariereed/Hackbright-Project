@@ -1,5 +1,7 @@
+""" The purpose of this file is to seed Users and the blogs that they follow."""
+
 from datetime import datetime
-from model import Blog, User, User_blog, db, connect_to_db
+from model import User, User_blog, db, connect_to_db
 from server import app
 
 

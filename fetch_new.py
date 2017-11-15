@@ -1,3 +1,7 @@
+""" The purpose of this file is to fetch data from articles. If checks to
+see if there are new articles, if there are it seeds them and updates the
+most recent in Blog."""
+
 from datetime import datetime
 from model import Article, Blog, db, connect_to_db
 from server import app
@@ -13,7 +17,7 @@ def check_newest_date(blog, new_article_date):
         return False
 
 
-def seed_data():
+def seed_new_data():
     """ Fetch the articles and add into db if it is new. """
 
     blog_rss_urls = ["http://feeds.feedburner.com/StudyHacks?format=xml",
@@ -56,3 +60,5 @@ def seed_data():
 if __name__ == "__main__":
 
     connect_to_db(app, "postgresql:///projectdb")
+
+    seed_new_data()

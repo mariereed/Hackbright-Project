@@ -1,13 +1,10 @@
 {% extends 'base.html' %}
 
 {% block title %}
-
     Login
-
 {% endblock %}
 
 {% block content %}
-
 	<form action="/log_confirm" method="POST">
         Email: <input type="text" name="email"><br>
         Password: <input type="text" name="password"><br>
@@ -16,5 +13,4 @@
 
     <br>or<br>
     <a href="/register">Register</a>
-
 {% endblock %}
