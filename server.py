@@ -105,6 +105,26 @@ def display_user_details(user_id):
     return render_template('user_details.html', user=user, users_blogs=users_blogs)
 
 
+@app.route('/timeline/<user_id>')
+def display_users_timeline(user_id):
+    """Display the timeline with truncated texts and no images."""
+
+    users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
+
+    blogs = []
+    for item in users_blogs:
+        blogs.append(item.blog_id)
+
+    articles = Article.query.filter(Article.blog_id.in_(blogs)).order_by(Article.publish_date.desc()).all()
+    # Here i need to order the articles by publish date
+
+    formatted_art = [{'content': text_from_html(article.content or ''),
+                      'description': text_from_html(article.description or ''),
+                      'db_info': article} for article in articles]
+
+    return render_template('users_timeline.html', formatted_art=formatted_art, users_blogs=users_blogs)
+
+
 @app.route('/data')
 def display_some_data():
     """ The purpose of this page is to show that data can
