@@ -100,8 +100,9 @@ def display_user_details(user_id):
     """ This page displays the user's details."""
 
     user = User.query.filter(User.user_id == user_id).first()
+    users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
 
-    return render_template('user_details.html', user=user)
+    return render_template('user_details.html', user=user, users_blogs=users_blogs)
 
 
 @app.route('/data')

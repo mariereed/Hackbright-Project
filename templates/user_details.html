@@ -8,7 +8,12 @@
 	<h1>Welcome back, {{user.name}}!</h1>
 
 	<h3>
-		Blogs you follow: <br>
+		Blogs you follow:<br>
+		<ul>
+		{% for item in users_blogs %}
+			<li>{{ item.blog.name}}<br>
+		{% endfor %}
+		</ul>
 		Your favorite articles: <br>
 	</h3>
 {% endblock %}
