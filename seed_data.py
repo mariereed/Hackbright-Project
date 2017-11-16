@@ -201,7 +201,9 @@ def seed_article(blog, root, namespace):
     # Altering the seed_data to gather all the articles for each RSS feed
     for item in items:
         tag_values = create_value_dict(item, desired_tag, namespace)
-        if item is items[0]:
+        if item is items[0] and blog.blog_id != 3:
+            blog.most_recent = tag_values['publish_date']
+        if item is items[1] and blog.blog_id == 3:
             blog.most_recent = tag_values['publish_date']
         article = find_tag(item, 'title', namespace).text
 
