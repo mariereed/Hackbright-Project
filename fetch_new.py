@@ -10,7 +10,7 @@ from seed_data import get_response, create_root, create_namespace, find_all, fin
 def check_newest_date(blog, new_article_date):
     """ Checks to see if the article is new."""
 
-    if new_article_date > blog.most_recent:
+    if db.DateTime(new_article_date) > db.DateTime(blog.most_recent):
         return True
     else:
         return False
@@ -33,27 +33,29 @@ def seed_new_data():
 
         items = find_all(root, find_entry_tag(root, namespace), namespace)
         this_blog = Blog.query.filter(Blog.rss_url == blog).first()
-
+        temp_most_recent = None
         for item in items:
             tag_values = create_value_dict(item, desired_tag, namespace)
             pub_date = tag_values['publish_date']
             if check_newest_date(this_blog, pub_date):
-                # THEN SEED THE ARTICLE
-                article = find_tag(item, 'title', namespace).text
-                article = Article(blog_id=this_blog.blog_id,
-                                  title=tag_values['title'],
-                                  activity=True,
-                                  url=tag_values['url'],
-                                  description=tag_values['description'],
-                                  publish_date=tag_values['publish_date'],
-                                  content=tag_values['content'])
-                db.session.add(article)
-                if item is items[0]:
-                    temp_most_recent = tag_values['publish_date']
-
+                # # THEN SEED THE ARTICLE
+                # article = find_tag(item, 'title', namespace).text
+                # article = Article(blog_id=this_blog.blog_id,
+                #                   title=tag_values['title'],
+                #                   activity=True,
+                #                   url=tag_values['url'],
+                #                   description=tag_values['description'],
+                #                   publish_date=tag_values['publish_date'],
+                #                   content=tag_values['content'])
+                # db.session.add(article)
+                # if item is items[0]:
+                #     temp_most_recent = db.DateTime(tag_values['publish_date'])
+                print 'got here'
         # UPDATE MOST_RECENT, only to the newest article after all new articles are updated
-        this_blog.most_recent = temp_most_recent
-        db.session.commit()
+        # if temp_most_recent:
+        #     this_blog.most_recent = temp_most_recent
+        # db.session.commit()
+    print 'finished'
 
 
 if __name__ == "__main__":
