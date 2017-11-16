@@ -98,12 +98,11 @@ class User_blog(db.Model):
     __tablename__ = "user_blogs"
 
     user_blog_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    blog_id = db.Column(db.Integer, db.ForeignKey('blogs.blog_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    blog_id = db.Column(db.Integer, db.ForeignKey('blogs.blog_id'), nullable=False)
 
     # Define relationship to user
     user = db.relationship("User", backref='user_blogs')
-
 
     # Define relationship to blog
     blog = db.relationship("Blog", backref='user_blogs')

@@ -18,4 +18,3 @@ if __name__ == "__main__":
 
     change_blog_name(5, 'ReadyTwoWear')
     change_blog_name(1, 'Study Hacks')
-	

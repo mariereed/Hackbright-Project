@@ -60,6 +60,8 @@ def register_confirm():
     email = request.form.get("email")
     password = request.form.get("password")
     name = request.form.get("name")
+    blogs = request.form.getlist("blog")
+
     check = User.query.filter(User.email == email).first()
 
     if check:
@@ -74,7 +76,13 @@ def register_confirm():
 
         db.session.add(name)
         db.session.commit()
-        flash('Thank you for registering {}'.format(name))
+
+        for blog in blogs:
+            connection = User_blog(user_id=name.user_id, blog_id=int(blog))
+            db.session.add(connection)
+
+        db.session.commit()
+        flash('Thank you for registering {}'.format(name.name))
         session['user_id'] = name.user_id
         flash('Logged In')
         return redirect('/users/{user_id}'.format(user_id=name.user_id))

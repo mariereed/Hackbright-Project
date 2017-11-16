@@ -62,7 +62,11 @@ def seed_new_data():
                 # db.session.add(article)
                 # if item is items[0]:
                 #     temp_most_recent = db.DateTime(tag_values['publish_date'])
-                print 'got here'
+                print
+                print
+                print 'I FOUND SOMETHING NEWWWWWWWW'
+                print
+                print
         # UPDATE MOST_RECENT, only to the newest article after all new articles are updated
         # if temp_most_recent:
         #     this_blog.most_recent = temp_most_recent
