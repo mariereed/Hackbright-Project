@@ -125,6 +125,23 @@ def display_users_timeline(user_id):
     return render_template('users_timeline.html', formatted_art=formatted_art, users_blogs=users_blogs)
 
 
+@app.route('/like', methods=["POST"])
+def like_an_article():
+
+    print "I got to the server."
+    if session.get('user_id') == request.form.get('articleId'):
+        # Create a favorite from the ajax request
+        favorite = Favorite(user_id=session['user_id'], article_id=request.form.get('articleId'))
+
+        db.session.add(favorite)
+        db.session.commit()
+        print "I tried to favorite"
+        return 'True'
+    else:
+        flash('Please log in before favoriting.')
+        return 'False'
+
+
 @app.route('/data')
 def display_some_data():
     """ The purpose of this page is to show that data can

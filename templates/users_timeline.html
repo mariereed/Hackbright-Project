@@ -5,18 +5,21 @@
 {% endblock %}
 
 {% block content %}
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="/static/js/like.js"></script>
+
 	<h1>Welcome back, {{users_blogs[0].user.name}}!</h1>
 	{% for article in formatted_art %}
-		<h1>{{article['db_info'].blog.name}}</h1>
+		<h2>{{article['db_info'].blog.name}}</h2>
 		<h3>
+			<button type="button" id="{{article['db_info'].article_id}}" class="btn btn-default btn-sm like">
+	          <span class="glyphicon glyphicon-heart"></span> 
+	        </button>
 			<a href="/articles/{{ article['db_info'].article_id }}">
                 {{article['db_info'].title}}
             </a>
         </h3>
-		<ul>
-			<li>Published: {{article['db_info'].publish_date}}</li>
-		</ul>
-
+			<h6>Published: {{article['db_info'].publish_date}}</h6>
 		{% if article['db_info'].description %}
 			<p>{{article['description']|safe|truncate(300, end='[...]')}}</p>
 		{% elif article['content'] %}
