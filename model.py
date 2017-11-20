@@ -77,8 +77,8 @@ class Favorite(db.Model):
     __tablename__ = "favorites"
 
     fav_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    article_id = db.Column(db.Integer, db.ForeignKey('articles.article_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    article_id = db.Column(db.Integer, db.ForeignKey('articles.article_id'), unique=True, nullable=False)
 
     # Define relationship to user
     user = db.relationship("User", backref='favorites')

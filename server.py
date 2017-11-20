@@ -1,12 +1,13 @@
 """ The purpose of this file is to run the server."""
 
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, redirect, request, flash, session
+from flask import Flask, render_template, redirect, request, flash, session, g, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Blog, User_blog, Favorite, Article, connect_to_db, db
 from bs import beautify
 from bs_old import text_from_html
 from datetime import datetime
+from functools import wraps
 
 # -------- Set Up ----------------------------------------------
 app = Flask(__name__)
@@ -16,6 +17,32 @@ app.secret_key = "ABC"
 app.jinja_env.undefined = StrictUndefined
 
 # -------- Routes ----------------------------------------------
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.current_user is None:
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.before_request
+def pre_process_all_requests():
+    """Setup the request context"""
+
+    user_id = session.get('user_id')
+    if user_id:
+        g.current_user = User.query.get(user_id)
+        g.logged_in = True
+        g.email = g.current_user.email
+        g.user_id = g.current_user.user_id
+        g.password = g.current_user.password
+    else:
+        g.logged_in = False
+        g.current_user = None
+        g.email = None
 
 
 @app.route('/')
@@ -96,16 +123,18 @@ def register():
 
 
 @app.route('/users/<user_id>')
+@login_required
 def display_user_details(user_id):
     """ This page displays the user's details."""
 
-    user = User.query.filter(User.user_id == user_id).first()
+    # user = User.query.filter(User.user_id == user_id).first()
     users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
 
-    return render_template('user_details.html', user=user, users_blogs=users_blogs)
+    return render_template('user_details.html', user=g.current_user, users_blogs=users_blogs)
 
 
 @app.route('/timeline/<user_id>')
+@login_required
 def display_users_timeline(user_id):
     """Display the timeline with truncated texts and no images."""
 
@@ -122,24 +151,45 @@ def display_users_timeline(user_id):
                       'description': text_from_html(article.description or ''),
                       'db_info': article} for article in articles]
 
-    return render_template('users_timeline.html', formatted_art=formatted_art, users_blogs=users_blogs)
+    return render_template('users_timeline.html', user=g.current_user, formatted_art=formatted_art, users_blogs=users_blogs)
 
 
 @app.route('/like', methods=["POST"])
+@login_required
 def like_an_article():
+    """Favorite an article."""
 
-    print "I got to the server."
-    if session.get('user_id') == request.form.get('articleId'):
+    if g.logged_in:
+        check = Favorite.query.filter(Favorite.user_id == g.user_id,
+                                      Favorite.article_id == request.form.get('articleId')
+                                      ).first()
+        print
+        print 'you are logged in'
+        print
+        # If there are no records of this articles in favorites, then proceed.
+        if not check:
         # Create a favorite from the ajax request
-        favorite = Favorite(user_id=session['user_id'], article_id=request.form.get('articleId'))
+            favorite = Favorite(user_id=session['user_id'], article_id=request.form.get('articleId'))
 
-        db.session.add(favorite)
-        db.session.commit()
-        print "I tried to favorite"
-        return 'True'
+            db.session.add(favorite)
+            db.session.commit()
+            print
+            print 'i added it to your favorites'
+            print
+            return jsonify({'confirm': True, 'id': request.form.get('articleId')})
+        else:
+            # flash('You have already favorited this article.')
+            print
+            print 'You have already favorited this'
+            print
+            return jsonify({'confirm': 'False'})
+
     else:
-        flash('Please log in before favoriting.')
-        return 'False'
+        # flash('Please log in before favoriting.')
+        print
+        print 'you are not logged in'
+        print
+        return jsonify({'confirm': 'False'})
 
 
 @app.route('/data')
