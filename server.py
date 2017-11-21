@@ -140,6 +140,10 @@ def display_users_timeline(user_id):
 
     users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
 
+    favorites = Favorite.query.filter(Favorite.user_id == user_id).all()
+
+    faved_ids = [favorite.article_id for favorite in favorites]
+
     blogs = []
     for item in users_blogs:
         blogs.append(item.blog_id)
@@ -151,7 +155,12 @@ def display_users_timeline(user_id):
                       'description': text_from_html(article.description or ''),
                       'db_info': article} for article in articles]
 
-    return render_template('users_timeline.html', user=g.current_user, formatted_art=formatted_art, users_blogs=users_blogs)
+    return render_template('users_timeline.html',
+                           user=g.current_user,
+                           formatted_art=formatted_art,
+                           users_blogs=users_blogs,
+                           faved_ids=faved_ids
+                           )
 
 
 @app.route('/like', methods=["POST"])
