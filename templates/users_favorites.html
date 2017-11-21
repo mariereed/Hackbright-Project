@@ -8,6 +8,9 @@
   	<script src="/static/js/unlike.js"></script>
 
   	<h1>Favorites</h1>
+  	{% if not formatted_art %}
+  		<h4>You have not favorited any articles yet!</h4>
+  	{% endif %}
 	{% for article in formatted_art %}
 		<div id="div-{{article['db_info'].article_id}}">
 			<h3>
