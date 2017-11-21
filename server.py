@@ -173,6 +173,33 @@ def display_users_timeline(user_id):
                            )
 
 
+@app.route('/favorites/<user_id>')
+@login_required
+def display_users_favorites(user_id):
+    """Display the timeline with truncated texts and no images."""
+
+    users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
+
+    blogs = []
+    for item in users_blogs:
+        blogs.append(item.blog_id)
+
+    favorites = Favorite.query.filter(Favorite.user_id == user_id).all()
+    # .order_by(Favorite.article.publish_date.desc())
+    formatted_art = [{'content': text_from_html(favorite.article.content or ''),
+                      'description': text_from_html(favorite.article.description or ''),
+                      'db_info': favorite.article} for favorite in favorites]
+
+    faved_ids = [favorite.article_id for favorite in favorites]
+
+    return render_template('users_favorites.html',
+                           user=g.current_user,
+                           formatted_art=formatted_art,
+                           users_blogs=users_blogs,
+                           faved_ids=faved_ids
+                           )
+
+
 @app.route('/like', methods=["POST"])
 @login_required
 def like_an_article():
@@ -182,9 +209,6 @@ def like_an_article():
         check = Favorite.query.filter(Favorite.user_id == g.user_id,
                                       Favorite.article_id == request.form.get('articleId')
                                       ).first()
-        print
-        print 'you are logged in'
-        print
         # If there are no records of this articles in favorites, then proceed.
         if not check:
         # Create a favorite from the ajax request
@@ -192,23 +216,32 @@ def like_an_article():
 
             db.session.add(favorite)
             db.session.commit()
-            print
-            print 'i added it to your favorites'
-            print
             return jsonify({'confirm': True, 'id': request.form.get('articleId')})
         else:
-            # flash('You have already favorited this article.')
-            print
-            print 'You have already favorited this'
-            print
             return jsonify({'confirm': 'False'})
+    # else:
+    #     return jsonify({'confirm': 'False'})
 
-    else:
-        # flash('Please log in before favoriting.')
-        print
-        print 'you are not logged in'
-        print
-        return jsonify({'confirm': 'False'})
+
+@app.route('/unlike', methods=["POST"])
+@login_required
+def unlike_an_article():
+    """Unfavorite an article."""
+
+    if g.logged_in:
+        check = Favorite.query.filter(Favorite.user_id == g.user_id,
+                                      Favorite.article_id == request.form.get('articleId')
+                                      ).first()
+        # If there are records of this article in favorites, then proceed.
+        if check:
+        # Create a favorite from the ajax request
+            favorite = Favorite.query.filter(Favorite.user_id == session['user_id'], Favorite.article_id == request.form.get('articleId')).first()
+
+            db.session.delete(favorite)
+            db.session.commit()
+            return jsonify({'confirm': True, 'id': request.form.get('articleId')})
+        else:
+            return jsonify({'confirm': 'False'})
 
 
 @app.route('/data')
