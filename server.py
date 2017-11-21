@@ -64,7 +64,7 @@ def login():
 def logout():
     """ Log out the user."""
 
-    session['user_id'] = None
+    session.clear()
 
     return redirect('/')
 
