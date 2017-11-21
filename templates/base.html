@@ -3,6 +3,7 @@
   <head>
     <title>{% block title %}TITLE GOES HERE{% endblock%}</title>
 
+    <!-- Navbar -->
     <a href='/'>Home|</a>
     {% if 'user_id' not in session %}
       <a href='/login'>Log In|</a>
@@ -10,9 +11,11 @@
       <a href='/logout'>Log Out|</a>
       <a href="/users/{{session['user_id']}}">My Info|</a>
       <a href="/timeline/{{session['user_id']}}">My Timeline|</a>
+      <a href="/favorites/{{session['user_id']}}">My Favorites|</a>
     {% endif %}
     
-
+    <!-- Scripts and Styles -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery.js"></script>
     <style>{% block style %}STYLE CONTENT GOES HERE{% endblock %}</style>
   </head>

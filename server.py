@@ -244,44 +244,6 @@ def unlike_an_article():
             return jsonify({'confirm': 'False'})
 
 
-@app.route('/data')
-def display_some_data():
-    """ The purpose of this page is to show that data can
-    be displayed from projectdb. It displays un-formatted raw data."""
-
-    blogs = Blog.query.all()
-    articles = Article.query.all()
-
-    return render_template('data.html', blogs=blogs, articles=articles)
-
-
-@app.route('/formatted_data')
-def display_formatted_data():
-    """ The purpose of this page is to test that formatted data displays."""
-
-    articles = Article.query.all()
-
-    formatted_art = [{'content': str(beautify(article.content or '')),
-                      'description': str(beautify(article.description or '')),
-                      'db_info': article} for article in articles]
-
-    return render_template('data2.html', formatted_art=formatted_art)
-
-
-@app.route('/timeline')
-def display_timeline():
-    """Display the timeline with truncated texts and no images."""
-
-    articles = Article.query.order_by(Article.publish_date.desc()).all()
-    # Here i need to order the articles by publish date
-
-    formatted_art = [{'content': text_from_html(article.content or ''),
-                      'description': text_from_html(article.description or ''),
-                      'db_info': article} for article in articles]
-
-    return render_template('timeline.html', formatted_art=formatted_art)
-
-
 @app.route('/articles/<article_id>')
 def display_article_details(article_id):
     """Display full article content and additional links, information."""
