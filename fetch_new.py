@@ -6,6 +6,8 @@ from model import Article, Blog, db, connect_to_db
 from server import app
 from seed_data import get_response, create_root, create_namespace, find_all, find_entry_tag, find_tag, create_value_dict, desired_tag
 from datetime import datetime
+import schedule
+import time
 
 
 def check_newest_date(blog, new_article_date):
@@ -16,17 +18,13 @@ def check_newest_date(blog, new_article_date):
     else:
         new_article_date = datetime.strptime(new_article_date[:-6], "%a, %d %b %Y %H:%M:%S")
     if new_article_date > blog.most_recent:
-        # THIS ISNT WORKING
-        # DOES NOT WORK FOR DESMOG BLOG most_recent is very old. order may be wrong ?
-        """ This is happening becausae FREAKING desmogblog
-        claims its most recent article is from nov 24 2016!!!!"""
         return True
     else:
         return False
 
 
-def seed_new_data():
-    """ Fetch the articles and add into db if it is new. """
+def job():
+    """Fetch the articles and add into db if it is new."""
 
     blog_rss_urls = ["http://feeds.feedburner.com/StudyHacks?format=xml",
                      "http://feeds2.feedburner.com/PsychologyBlog?format=xml",
@@ -35,7 +33,6 @@ def seed_new_data():
                      "http://feeds.feedburner.com/readytwowear?format=xml"]
 
     for blog in blog_rss_urls:
-
         response = get_response(blog)
         root = create_root(response)
         namespace = create_namespace(response)
@@ -46,36 +43,33 @@ def seed_new_data():
         for item in items:
             tag_values = create_value_dict(item, desired_tag, namespace)
             pub_date = tag_values['publish_date']
-            print 'test'
             if check_newest_date(this_blog, pub_date):
-            # This line above appears not to be working either...
-            # the comparison is basically doing everyonther one.
-                # # THEN SEED THE ARTICLE
-                # article = find_tag(item, 'title', namespace).text
-                # article = Article(blog_id=this_blog.blog_id,
-                #                   title=tag_values['title'],
-                #                   activity=True,
-                #                   url=tag_values['url'],
-                #                   description=tag_values['description'],
-                #                   publish_date=tag_values['publish_date'],
-                #                   content=tag_values['content'])
-                # db.session.add(article)
-                # if item is items[0]:
-                #     temp_most_recent = db.DateTime(tag_values['publish_date'])
-                print
-                print
-                print 'I FOUND SOMETHING NEWWWWWWWW'
-                print
-                print
-        # UPDATE MOST_RECENT, only to the newest article after all new articles are updated
-        # if temp_most_recent:
-        #     this_blog.most_recent = temp_most_recent
-        # db.session.commit()
-    print 'finished'
+                article = find_tag(item, 'title', namespace).text
+                article = Article(blog_id=this_blog.blog_id,
+                                  title=tag_values['title'],
+                                  activity=True,
+                                  url=tag_values['url'],
+                                  description=tag_values['description'],
+                                  publish_date=tag_values['publish_date'],
+                                  content=tag_values['content'])
+                db.session.add(article)
+                print "Added article: ", tag_values['title']
+                if item is items[0] and this_blog.blog_id != 3:
+                    temp_most_recent = tag_values['publish_date']
+                if this_blog.blog_id == 3 and item is items[1]:
+                    temp_most_recent = tag_values['publish_date']
+        if temp_most_recent:
+            this_blog.most_recent = temp_most_recent
+            print "Updating most_recent, id:", this_blog.blog_id
+        db.session.commit()
 
 
 if __name__ == "__main__":
 
     connect_to_db(app, "postgresql:///projectdb")
 
-    seed_new_data()
+    schedule.every(1).hour.do(job)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
