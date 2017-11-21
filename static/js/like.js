@@ -3,9 +3,10 @@
 $('document').ready(function() {
     function changeButton(results) {
         if (results.confirm === true) {
-            let theLikeButton = document.getElementById(results.id);
-            theLikeButton.style.color = 'red';
-            theLikeButton.className = 'favorited';
+            // let theLikeButton = document.getElementById(results.id);
+            let theLikeButton = $('#' + String(results.id));
+            // theLikeButton.style.color = 'red';
+            theLikeButton.attr('style', "color:red");
         }
     }
 

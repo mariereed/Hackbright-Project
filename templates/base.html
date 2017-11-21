@@ -2,7 +2,17 @@
 <html>
   <head>
     <title>{% block title %}TITLE GOES HERE{% endblock%}</title>
-    <a href="/">Home</a>|<a href="/timeline">Timeline</a>|<a href="/login">Log In</a>
+
+    <a href='/'>Home|</a>
+    {% if 'user_id' not in session %}
+      <a href='/login'>Log In|</a>
+    {% else %}
+      <a href='/logout'>Log Out|</a>
+      <a href="/users/{{session['user_id']}}">My Info|</a>
+      <a href="/timeline/{{session['user_id']}}">My Timeline|</a>
+    {% endif %}
+    
+
     <script src="https://code.jquery.com/jquery.js"></script>
     <style>{% block style %}STYLE CONTENT GOES HERE{% endblock %}</style>
   </head>
