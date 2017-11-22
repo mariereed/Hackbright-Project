@@ -231,10 +231,6 @@ def display_users_favorites(user_id):
 
     users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
 
-    blogs = []
-    for item in users_blogs:
-        blogs.append(item.blog_id)
-
     favorites = Favorite.query.filter(Favorite.user_id == user_id).all()
     # .order_by(Favorite.article.publish_date.desc())
     formatted_art = [{'content': text_from_html(favorite.article.content or ''),
