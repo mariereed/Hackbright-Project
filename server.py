@@ -143,6 +143,25 @@ def display_user_details(user_id):
     return render_template('user_details.html', user=g.current_user, users_blogs=users_blogs)
 
 
+@app.route('/remove_blog', methods=["POST"])
+@login_required
+def unfollow_blog():
+    """Unfollow a blog."""
+
+    if g.logged_in:
+        check = User_blog.query.filter(User_blog.user_id == g.user_id,
+                                       User_blog.blog_id == request.form.get('blog')
+                                       ).first()
+        # If there are records of this blog in user_blogs, then proceed.
+        if check:
+        # Delete blog for this user.
+            blog = User_blog.query.filter(User_blog.user_id == g.user_id, User_blog.blog_id == request.form.get('blog')).first()
+
+            db.session.delete(blog)
+            db.session.commit()
+    return redirect('/users/{user_id}'.format(user_id=g.user_id))
+
+
 @app.route('/timeline/<user_id>')
 @login_required
 def display_users_timeline(user_id):
