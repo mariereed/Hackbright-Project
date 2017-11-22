@@ -13,6 +13,15 @@
 			<li>{{ item.blog.name}}<br>
 		{% endfor %}
 		</ul>
-		Your favorite articles: <br>
 	</h3>
+	<h5>Unfollow a blog:</h5>
+	<form action='/remove_blog }}' method='POST'>
+        <select name="blog">
+        	<option value="" disabled selected></option>
+        	{% for item in users_blogs %}
+        		<option value="{{item.blog_id}}">{{item.blog.name}}</option>
+        	{% endfor %}
+        </select>
+        <input type='submit'>
+    </form>
 {% endblock %}
