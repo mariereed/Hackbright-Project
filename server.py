@@ -201,15 +201,18 @@ def display_users_timeline(user_id):
 
     users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
 
-    favorites = Favorite.query.filter(Favorite.user_id == user_id).all()
+    favorites = Favorite.query.filter(Favorite.user_id == user_id, Favorite.hidden != True).all()
 
     faved_ids = [favorite.article_id for favorite in favorites]
 
+    hiddens = Favorite.query.filter(Favorite.user_id == user_id, Favorite.hidden == True).all()
+
+    hidden_ids = [favorite.article_id for hidden in hiddens]
     blogs = []
     for item in users_blogs:
         blogs.append(item.blog_id)
 
-    articles = Article.query.filter(Article.blog_id.in_(blogs)).order_by(Article.publish_date.desc()).all()
+    articles = Article.query.filter(Article.blog_id.in_(blogs), db.not_(Article.article_id.in_(hidden_ids))).order_by(Article.publish_date.desc()).all()
     # Here i need to order the articles by publish date
 
     formatted_art = [{'content': text_from_html(article.content or ''),
@@ -231,7 +234,7 @@ def display_users_favorites(user_id):
 
     users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
 
-    favorites = Favorite.query.filter(Favorite.user_id == user_id).all()
+    favorites = Favorite.query.filter(Favorite.user_id == user_id, Favorite.hidden != True).all()
     # .order_by(Favorite.article.publish_date.desc())
     formatted_art = [{'content': text_from_html(favorite.article.content or ''),
                       'description': text_from_html(favorite.article.description or ''),
@@ -289,6 +292,30 @@ def unlike_an_article():
             return jsonify({'confirm': True, 'id': request.form.get('articleId')})
         else:
             return jsonify({'confirm': 'False'})
+
+
+@app.route('/hide', methods=["POST"])
+@login_required
+def hide_an_article():
+    """Hide an article from the timeline."""
+    article_id = request.form.get('articleId')[5:]
+
+    if g.logged_in:
+        check = Favorite.query.filter(Favorite.user_id == g.user_id,
+                                      Favorite.article_id == article_id
+                                      ).first()
+        # If there are no records of this articles in favorites, then proceed.
+        if not check:
+        # Create a favorite from the ajax request
+            favorite = Favorite(user_id=g.user_id, article_id=article_id, hidden=True)
+
+            db.session.add(favorite)
+            db.session.commit()
+            return jsonify({'confirm': True, 'id': article_id})
+        else:
+            check.hidden = True
+            db.session.commit()
+            return jsonify({'confirm': True, 'id': article_id})
 
 
 @app.route('/articles/<article_id>')
