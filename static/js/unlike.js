@@ -3,9 +3,6 @@
 $('document').ready(function() {
     function removeArticle(results) {
         if (results.confirm === true) {
-            console.log('Imade it into removeA');
-            console.log('div-' + String(results.id));
-            debugger;
             let theDiv = $('#div-' + String(results.id));
             theDiv.remove();
         }
