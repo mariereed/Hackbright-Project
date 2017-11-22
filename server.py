@@ -163,14 +163,33 @@ def unfollow_blog():
 
     if g.logged_in:
         check = User_blog.query.filter(User_blog.user_id == g.user_id,
-                                       User_blog.blog_id == request.form.get('blog')
+                                       User_blog.blog_id == request.form.get('add_blog')
                                        ).first()
         # If there are records of this blog in user_blogs, then proceed.
         if check:
         # Delete blog for this user.
-            blog = User_blog.query.filter(User_blog.user_id == g.user_id, User_blog.blog_id == request.form.get('blog')).first()
+            blog = User_blog.query.filter(User_blog.user_id == g.user_id, User_blog.blog_id == request.form.get('add_blog')).first()
 
             db.session.delete(blog)
+            db.session.commit()
+    return redirect('/users/{user_id}'.format(user_id=g.user_id))
+
+
+@app.route('/add_blog', methods=["POST"])
+@login_required
+def follow_blog():
+    """Follow a blog."""
+
+    if g.logged_in:
+        check = User_blog.query.filter(User_blog.user_id == g.user_id,
+                                       User_blog.blog_id == request.form.get('rem_blog')
+                                       ).first()
+        # If there are no records of this blog in user_blogs, then proceed.
+        if not check:
+        # Add blog for this user.
+            connection = User_blog(user_id=g.user_id, blog_id=request.form.get('rem_blog'))
+
+            db.session.add(connection)
             db.session.commit()
     return redirect('/users/{user_id}'.format(user_id=g.user_id))
 
