@@ -12,18 +12,25 @@
 	{% for article in formatted_art %}
 		<h2>{{article['db_info'].blog.name}}</h2>
 		<h3>
-			<button 
-            {% if article['db_info'].article_id in faved_ids %}
-                style="color: red;"             
-            {% endif %}
-            type="button" id="{{article['db_info'].article_id}}" class="btn btn-default btn-sm like">
-	          <span class="glyphicon glyphicon-heart"></span> 
-	        </button>
+			
 			<a href="/articles/{{ article['db_info'].article_id }}">
                 {{article['db_info'].title}}
             </a>
         </h3>
-			<h6>Published: {{article['db_info'].publish_date}}</h6>
+        <h6>
+    	<button 
+        {% if article['db_info'].article_id in faved_ids %}
+            style="color: red;"             
+        {% endif %}
+        type="button" id="{{article['db_info'].article_id}}" class="btn btn-default btn-sm like">
+          <span class="glyphicon glyphicon-heart"></span> 
+        </button>
+         <button 
+        type="button" id="{{article['db_info'].article_id}}" class="btn btn-default btn-sm like">
+          <span></span>Hide 
+        </button>
+		Published: {{article['db_info'].publish_date}}
+		</h6>
 		{% if article['db_info'].description %}
 			<p>{{article['description']|safe|truncate(300, end='[...]')}}</p>
 		{% elif article['content'] %}
