@@ -24,4 +24,14 @@
         </select>
         <input type='submit'>
     </form>
+    <h5>Follow another blog:</h5>
+	<form action='/add_blog' method='POST'>
+        <select name="blog">
+        	<option value="" disabled selected></option>
+        	{% for item in not_followed_blogs %}
+        		<option value="{{item.blog_id}}">{{item.name}}</option>
+        	{% endfor %}
+        </select>
+        <input type='submit'>
+    </form>
 {% endblock %}
