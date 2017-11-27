@@ -9,7 +9,6 @@ from bs_old import text_from_html
 from datetime import datetime
 from functools import wraps
 import bcrypt
-from salt import salt
 
 # -------- Set Up ----------------------------------------------
 app = Flask(__name__)
@@ -79,12 +78,11 @@ def log_confirm():
     email = request.form.get("email")
     password = request.form.get("password")
     password = b"{}".format(password)
-    hashed = bcrypt.hashpw(password, salt)
 
     check = User.query.filter(User.email == email).first()
 
     if check:
-        if check.password == hashed:
+        if bcrypt.checkpw(password, check.password.encode("utf-8")):
             session['user_id'] = check.user_id
             flash('Logged In')
             return redirect('/users/{user_id}'.format(user_id=check.user_id))
@@ -105,7 +103,7 @@ def register_confirm():
 
     password = request.form.get("password")
     password = b"{}".format(password)
-    hashed = bcrypt.hashpw(password, salt)
+    hashed = bcrypt.hashpw(password, bcrypt.gensalt())
 
     blogs = request.form.getlist("blog")
 
