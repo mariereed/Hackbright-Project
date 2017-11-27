@@ -3,14 +3,19 @@
 from datetime import datetime
 from model import User, User_blog, db, connect_to_db
 from server import app
+import bcrypt
+from salt import salt
 
 
 def create_test_user(name, email, password):
     """ Create a user instance and add to db."""
 
+    password = b"{}".format(password)
+    hashed = bcrypt.hashpw(password, salt)
+
     test_user = User(name=name,
                      email=email,
-                     password=password,
+                     password=hashed,
                      user_since=(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
                      )
 
