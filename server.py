@@ -8,6 +8,8 @@ from bs import beautify
 from bs_old import text_from_html
 from datetime import datetime
 from functools import wraps
+import bcrypt
+from salt import salt
 
 # -------- Set Up ----------------------------------------------
 app = Flask(__name__)
@@ -38,6 +40,7 @@ def pre_process_all_requests():
         g.logged_in = True
         g.email = g.current_user.email
         g.user_id = g.current_user.user_id
+        # Hashed password
         g.password = g.current_user.password
     else:
         g.logged_in = False
@@ -75,10 +78,13 @@ def log_confirm():
 
     email = request.form.get("email")
     password = request.form.get("password")
+    password = b"{}".format(password)
+    hashed = bcrypt.hashpw(password, salt)
+
     check = User.query.filter(User.email == email).first()
 
     if check:
-        if check.password == password:
+        if check.password == hashed:
             session['user_id'] = check.user_id
             flash('Logged In')
             return redirect('/users/{user_id}'.format(user_id=check.user_id))
@@ -95,8 +101,12 @@ def register_confirm():
     """ Allows users to register. Check to make sure they don't already exist."""
 
     email = request.form.get("email")
-    password = request.form.get("password")
     name = request.form.get("name")
+
+    password = request.form.get("password")
+    password = b"{}".format(password)
+    hashed = bcrypt.hashpw(password, salt)
+
     blogs = request.form.getlist("blog")
 
     check = User.query.filter(User.email == email).first()
@@ -107,7 +117,7 @@ def register_confirm():
     else:
         name = User(name=name,
                     email=email,
-                    password=password,
+                    password=hashed,
                     user_since=(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
                     )
 
