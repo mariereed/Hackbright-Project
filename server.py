@@ -85,7 +85,6 @@ def log_confirm():
     if check:
         if bcrypt.checkpw(password, check.password.encode("utf-8")):
             session['user_id'] = check.user_id
-            flash('Logged In')
             return redirect('/dashboard')
         else:
             flash('Incorrect login information')
@@ -128,9 +127,7 @@ def register_confirm():
             db.session.add(connection)
 
         db.session.commit()
-        flash('Thank you for registering {}'.format(name.name))
         session['user_id'] = name.user_id
-        flash('Logged In')
         return redirect('/dashboard')
 
 
