@@ -146,27 +146,6 @@ def display_user_details():
     # user = User.query.filter(User.user_id == user_id).first()
     users_blogs = User_blog.query.filter(User_blog.user_id == g.user_id).all()
 
-    favorites = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden != True).all()
-    formatted_art = [{'content': text_from_html(favorite.article.content or ''),
-                      'description': text_from_html(favorite.article.description or ''),
-                      'db_info': favorite.article} for favorite in favorites]
-
-    faved_ids = [favorite.article_id for favorite in favorites]
-
-    return render_template('user_details.html',
-                           user=g.current_user,
-                           formatted_art=formatted_art,
-                           users_blogs=users_blogs,
-                           faved_ids=faved_ids)
-
-
-@app.route('/settings')
-@login_required
-def display_user_settings():
-    """ This page displays the user's details."""
-
-    # user = User.query.filter(User.user_id == user_id).first()
-    users_blogs = User_blog.query.filter(User_blog.user_id == g.user_id).all()
     followed_blogs = []
     for each in users_blogs:
         followed_blogs.append(each.blog)
@@ -181,7 +160,19 @@ def display_user_settings():
         if each not in followed_blogs:
             not_followed_blogs.append(each)
 
-    return render_template('user_settings.html', user=g.current_user, users_blogs=users_blogs, not_followed_blogs=not_followed_blogs)
+    favorites = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden != True).all()
+    formatted_art = [{'content': text_from_html(favorite.article.content or ''),
+                      'description': text_from_html(favorite.article.description or ''),
+                      'db_info': favorite.article} for favorite in favorites]
+
+    faved_ids = [favorite.article_id for favorite in favorites]
+
+    return render_template('user_details.html',
+                           user=g.current_user,
+                           formatted_art=formatted_art,
+                           users_blogs=users_blogs,
+                           faved_ids=faved_ids,
+                           not_followed_blogs=not_followed_blogs)
 
 
 @app.route('/remove_blog', methods=["POST"])

@@ -25,6 +25,44 @@ body {
 	</ul>
 	</h3>
 
+    <h5>Unfollow a blog:</h5>
+    <form action='/remove_blog' method='POST'>
+        <select name="rem_blog">
+            <option value="" disabled selected></option>
+            {% for item in users_blogs %}
+                <option value="{{item.blog_id}}">{{item.blog.name}}</option>
+            {% endfor %}
+        </select>
+        <input type='submit' class="btn btn-default btn-sm">
+    </form>
+
+    <h5>Follow a blog:</h5>
+    <form action='/add_blog' method='POST'>
+        <select name="add_blog">
+            <option value="" disabled selected></option>
+            {% for item in not_followed_blogs %}
+                <option value="{{item.blog_id}}">{{item.name}}</option>
+            {% endfor %}
+        </select>
+        <input type='submit' class="btn btn-default btn-sm">
+    </form>
+
+    <h5>Change profile photo</h5>
+    <form action='/change_avatar' method='POST'>
+        <select name="avatar">
+            <option value="" disabled selected></option>
+        </select>
+        <input type='submit' class="btn btn-default btn-sm">
+    </form>
+
+    <h5>Change background image</h5>
+    <form action='/change_background' method='POST'>
+        <select name="background">
+            <option value="" disabled selected></option>
+        </select>
+        <input type='submit' class="btn btn-default btn-sm">
+    </form>
+
     <script src="/static/js/unlike.js"></script>
 
     <h3>Favorites</h3>
