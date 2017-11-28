@@ -9,6 +9,7 @@ body {
     background-image: url("https://fthmb.tqn.com/f1rGpVYiLgur40BW2zN69cNG_C8=/3000x1926/filters:fill(auto,1)/fog-56a407943df78cf772806f75.jpg");
     background-repeat: no-repeat;
     background-size: 100%;
+    background-attachment: fixed;
 }
 {% endblock %}
 
@@ -22,24 +23,42 @@ body {
 		{% endfor %}
 		</ul>
 	</h3>
-	<h5>Unfollow a blog:</h5>
-	<form action='/remove_blog' method='POST'>
-        <select name="add_blog">
-        	<option value="" disabled selected></option>
-        	{% for item in users_blogs %}
-        		<option value="{{item.blog_id}}">{{item.blog.name}}</option>
-        	{% endfor %}
-        </select>
-        <input type='submit'>
-    </form>
-    <h5>Follow another blog:</h5>
-	<form action='/add_blog' method='POST'>
-        <select name="rem_blog">
-        	<option value="" disabled selected></option>
-        	{% for item in not_followed_blogs %}
-        		<option value="{{item.blog_id}}">{{item.name}}</option>
-        	{% endfor %}
-        </select>
-        <input type='submit'>
-    </form>
+    
+    <h3>Your Friends</h3>
+    <ul>
+        <li>Top n friends</li>
+        <li>Their top n faves</li>
+        <li>Their avatar</li>
+        <li></li>
+    </ul>
+
+    <script src="/static/js/unlike.js"></script>
+
+    <h3>Favorites</h3>
+    {% if not formatted_art %}
+        <h4>You have not favorited any articles yet!</h4>
+    {% endif %}
+    {% for article in formatted_art %}
+        <div id="div-{{article['db_info'].article_id}}">
+            <h3>
+                <button 
+                {% if article['db_info'].article_id in faved_ids %}
+                    style="color: red;"             
+                {% endif %}
+                type="button" id="{{article['db_info'].article_id}}" class="btn btn-default btn-sm like">
+                  <span class="glyphicon glyphicon-heart"></span> 
+                </button>
+                <a href="/articles/{{ article['db_info'].article_id }}">
+                    {{article['db_info'].title}}
+                </a>
+            </h3>
+            <h6>{{article['db_info'].blog.name}} Published: {{article['db_info'].publish_date}}</h6>
+            {% if article['db_info'].description %}
+                <p>{{article['description']|safe|truncate(300, end='[...]')}}</p>
+            {% elif article['content'] %}
+                <!-- |safe means override and allow it to be HTML instead of a string -->
+                <p><div id="content"> {{article['content']|safe|truncate(300, end='[...]')}}</div></p>
+            {% endif %}
+        </div>
+    {% endfor %}
 {% endblock %}
