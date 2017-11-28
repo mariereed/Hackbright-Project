@@ -85,7 +85,7 @@ def log_confirm():
         if bcrypt.checkpw(password, check.password.encode("utf-8")):
             session['user_id'] = check.user_id
             flash('Logged In')
-            return redirect('/users/{user_id}'.format(user_id=check.user_id))
+            return redirect('/dashboard')
         else:
             flash('Incorrect login information')
             return redirect('/login')
@@ -130,7 +130,7 @@ def register_confirm():
         flash('Thank you for registering {}'.format(name.name))
         session['user_id'] = name.user_id
         flash('Logged In')
-        return redirect('/users/{user_id}'.format(user_id=name.user_id))
+        return redirect('/dashboard')
 
 
 @app.route('/register')
@@ -140,13 +140,13 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/users/<user_id>')
+@app.route('/dashboard')
 @login_required
-def display_user_details(user_id):
+def display_user_details():
     """ This page displays the user's details."""
 
     # user = User.query.filter(User.user_id == user_id).first()
-    users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
+    users_blogs = User_blog.query.filter(User_blog.user_id == g.user_id).all()
     followed_blogs = []
     for each in users_blogs:
         followed_blogs.append(each.blog)
@@ -180,7 +180,7 @@ def unfollow_blog():
 
             db.session.delete(blog)
             db.session.commit()
-    return redirect('/users/{user_id}'.format(user_id=g.user_id))
+    return redirect('/dashboard')
 
 
 @app.route('/add_blog', methods=["POST"])
@@ -199,21 +199,21 @@ def follow_blog():
 
             db.session.add(connection)
             db.session.commit()
-    return redirect('/users/{user_id}'.format(user_id=g.user_id))
+    return redirect('/dashboard')
 
 
-@app.route('/timeline/<user_id>')
+@app.route('/timeline')
 @login_required
-def display_users_timeline(user_id):
+def display_users_timeline():
     """Display the timeline with truncated texts and no images."""
 
-    users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
+    users_blogs = User_blog.query.filter(User_blog.user_id == g.user_id).all()
 
-    favorites = Favorite.query.filter(Favorite.user_id == user_id, Favorite.hidden != True).all()
+    favorites = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden != True).all()
 
     faved_ids = [favorite.article_id for favorite in favorites]
 
-    hiddens = Favorite.query.filter(Favorite.user_id == user_id, Favorite.hidden == True).all()
+    hiddens = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden == True).all()
 
     hidden_ids = [favorite.article_id for hidden in hiddens]
     blogs = []
@@ -235,14 +235,14 @@ def display_users_timeline(user_id):
                            )
 
 
-@app.route('/favorites/<user_id>')
+@app.route('/favorites')
 @login_required
-def display_users_favorites(user_id):
+def display_users_favorites():
     """Display the timeline with truncated texts and no images."""
 
-    users_blogs = User_blog.query.filter(User_blog.user_id == user_id).all()
+    users_blogs = User_blog.query.filter(User_blog.user_id == g.user_id).all()
 
-    favorites = Favorite.query.filter(Favorite.user_id == user_id, Favorite.hidden != True).all()
+    favorites = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden != True).all()
     # .order_by(Favorite.article.publish_date.desc())
     formatted_art = [{'content': text_from_html(favorite.article.content or ''),
                       'description': text_from_html(favorite.article.description or ''),
@@ -270,7 +270,7 @@ def like_an_article():
         # If there are no records of this articles in favorites, then proceed.
         if not check:
         # Create a favorite from the ajax request
-            favorite = Favorite(user_id=session['user_id'], article_id=request.form.get('articleId'))
+            favorite = Favorite(user_id=g.user_id, article_id=request.form.get('articleId'))
 
             db.session.add(favorite)
             db.session.commit()
@@ -293,7 +293,7 @@ def unlike_an_article():
         # If there are records of this article in favorites, then proceed.
         if check:
         # Create a favorite from the ajax request
-            favorite = Favorite.query.filter(Favorite.user_id == session['user_id'], Favorite.article_id == request.form.get('articleId')).first()
+            favorite = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.article_id == request.form.get('articleId')).first()
 
             db.session.delete(favorite)
             db.session.commit()
