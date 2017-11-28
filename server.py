@@ -147,19 +147,6 @@ def display_user_details():
 
     # user = User.query.filter(User.user_id == user_id).first()
     users_blogs = User_blog.query.filter(User_blog.user_id == g.user_id).all()
-    followed_blogs = []
-    for each in users_blogs:
-        followed_blogs.append(each.blog)
-
-    all_blogs = Blog.query.all()
-    total_blogs = []
-    for each in all_blogs:
-        total_blogs.append(each)
-
-    not_followed_blogs = []
-    for each in total_blogs:
-        if each not in followed_blogs:
-            not_followed_blogs.append(each)
 
     favorites = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden != True).all()
     formatted_art = [{'content': text_from_html(favorite.article.content or ''),
@@ -172,8 +159,7 @@ def display_user_details():
                            user=g.current_user,
                            formatted_art=formatted_art,
                            users_blogs=users_blogs,
-                           faved_ids=faved_ids,
-                           not_followed_blogs=not_followed_blogs)
+                           faved_ids=faved_ids)
 
 
 @app.route('/settings')
