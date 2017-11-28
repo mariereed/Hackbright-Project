@@ -51,7 +51,8 @@ def pre_process_all_requests():
 def homepage():
     """ My homepage."""
 
-    return render_template('homepage.html')
+
+    return render_template('homepage.html', user=g.current_user)
 
 
 @app.route('/login')
