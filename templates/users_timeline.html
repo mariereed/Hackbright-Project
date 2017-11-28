@@ -16,7 +16,6 @@ body {
 {% block content %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="/static/js/like.js"></script>
-    <h1>Welcome back, {{users_blogs[0].user.name}}!</h1>
     {% for article in formatted_art %}
         <div id="div-{{article['db_info'].article_id}}">
             <h2>{{article['db_info'].blog.name}}</h2>

@@ -191,7 +191,7 @@ def unfollow_blog():
 
             db.session.delete(blog)
             db.session.commit()
-    return redirect('/settings')
+    return redirect('/dashboard')
 
 
 @app.route('/add_blog', methods=["POST"])
@@ -210,7 +210,7 @@ def follow_blog():
 
             db.session.add(connection)
             db.session.commit()
-    return redirect('/settings')
+    return redirect('/dashboard')
 
 
 @app.route('/timeline')
