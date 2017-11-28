@@ -16,21 +16,14 @@ body {
 {% block content %}
 	<h1>Welcome back, {{user.name}}!</h1>
 	<h3>
-		Blogs you follow:<br>
-		<ul>
-		{% for item in users_blogs %}
-			<li>{{ item.blog.name}}<br>
-		{% endfor %}
-		</ul>
+		Blogs you follow:
+    </h3>
+	<ul>
+	{% for item in users_blogs %}
+		<li>{{ item.blog.name}}<br>
+	{% endfor %}
+	</ul>
 	</h3>
-    
-    <h3>Your Friends</h3>
-    <ul>
-        <li>Top n friends</li>
-        <li>Their top n faves</li>
-        <li>Their avatar</li>
-        <li></li>
-    </ul>
 
     <script src="/static/js/unlike.js"></script>
 

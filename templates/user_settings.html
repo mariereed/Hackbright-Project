@@ -37,22 +37,6 @@ body {
         <input type='submit' class="btn btn-default btn-sm">
     </form>
 
-    <h5>Remove a friend:</h5>
-    <form action='/remove_friend' method='POST'>
-        <select name="rem_friend">
-            <option value="" disabled selected></option>
-        </select>
-        <input type='submit' class="btn btn-default btn-sm">
-    </form>
-
-    <h5>Add a friend:</h5>
-    <form action='/add_friend' method='POST'>
-        <select name="add_friend">
-            <option value="" disabled selected></option>
-        </select>
-        <input type='submit' class="btn btn-default btn-sm">
-    </form>
-
     <h5>Change profile photo</h5>
     <form action='/change_avatar' method='POST'>
         <select name="avatar">
@@ -71,7 +55,7 @@ body {
     <br>
     <button 
         type="button" id="deactivate" class="btn btn-default btn-sm">
-          <span></span>Deactivate
+          <span></span>Deactivate Account
     </button>
 
 {% endblock %}
