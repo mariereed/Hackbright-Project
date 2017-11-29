@@ -20,12 +20,13 @@ app.jinja_env.undefined = StrictUndefined
 # -------- Routes ----------------------------------------------
 
 
-def login_required(f):
-    @wraps(f)
+def login_required(decorated_view):
+    @wraps(decorated_view)
     def decorated_function(*args, **kwargs):
         if g.current_user is None:
             return redirect('/')
-        return f(*args, **kwargs)
+        return decorated_view(*args, **kwargs)
+        # I could take this out becuase I don't pass in values
     return decorated_function
 
 
