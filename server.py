@@ -24,7 +24,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.current_user is None:
-            return redirect('/login')
+            return redirect('/')
         return f(*args, **kwargs)
     return decorated_function
 
@@ -51,19 +51,11 @@ def pre_process_all_requests():
 def homepage():
     """ My homepage."""
 
-
     return render_template('homepage.html', user=g.current_user)
 
 
-@app.route('/login')
-def login():
-    """ Login page."""
-
-    return render_template('login.html')
-
-
 @app.route('/logout')
-@login_required
+# @login_required
 def logout():
     """ Log out the user."""
 
@@ -88,10 +80,10 @@ def log_confirm():
             return redirect('/dashboard')
         else:
             flash('Incorrect login information')
-            return redirect('/login')
+            return redirect('/')
     else:
         flash('Incorrect login information')
-        return redirect('/login')
+        return redirect('/')
 
 
 @app.route('/register_confirm', methods=["POST"])
@@ -111,7 +103,7 @@ def register_confirm():
 
     if check:
         flash('{} already exists, please log in.'.format(email))
-        return redirect('/login')
+        return redirect('/')
     else:
         name = User(name=name,
                     email=email,

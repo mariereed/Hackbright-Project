@@ -2,12 +2,6 @@
 <html>
   <head>
     <title>Blog Defog</title>
-
-    <!-- Navbar -->
-    {% if 'user_id' not in session %}
-      <a href='/login'>Log In|</a>
-    {% endif %}
-    
     <!-- Scripts and Styles -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery.js"></script>
@@ -22,20 +16,29 @@
   </head>
   <body>
 
-	<br>
-	<br>
-	<br>
-	<h1>Blog Defog</h1>
-	<br>
-	<br>
-	<br>
-	{% if user %}
-		<a href='/dashboard'>
-		<h4>Continue as {{user.name}}?</h4>
-		</a>
-		<a href='/login'>
-		<h6>Sign in as different user</h6>
-		</a>
-	{% endif %}
-</body>
+  	<br>
+  	<br>
+  	<br>
+  	<h1>Blog Defog</h1>
+  	<br>
+  	<br>
+  	<br>
+  	{% if user %}
+  		<a href='/dashboard'>
+    		<h4>Continue as {{user.name}}?</h4>
+  		</a>
+      <br>or<br>
+  	{% endif %}
+  		<h4>Sign in</h4>
+      <form action="/log_confirm" method="POST">
+        Email: <input type="text" name="email"><br>
+        Password: <input type="password" name="password"><br>
+        <input type="submit">        
+    </form>
+
+    <br>or<br>
+    <h4>
+    <a href="/register">Register</a>
+  </h4>
+  </body>
 </html>
