@@ -201,7 +201,7 @@ def change_avatar():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         user = User.query.filter(User.user_id == g.user_id).first()
-        user.avatar = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        user.avatar = filename
 
         db.session.commit()
     else:
@@ -227,7 +227,7 @@ def change_background():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         user = User.query.filter(User.user_id == g.user_id).first()
-        user.background_img = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        user.background_img = filename
 
         db.session.commit()
     else:
