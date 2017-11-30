@@ -142,6 +142,8 @@ def register_confirm():
 
         db.session.commit()
         session['user_id'] = name.user_id
+        session['avatar'] = name.avatar
+        session['background_img'] = name.background_img
         return redirect('/dashboard')
 
 
