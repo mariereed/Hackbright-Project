@@ -23,25 +23,40 @@
   	<br>
   	<br>
   	<br>
+
+
   	{% if user %}
   		<a href='/dashboard'>
     		<h4>Continue as {{user.name}}?</h4>
   		</a>
-      <br>or<br>
-  	{% endif %}
-    <br>
-  		<h4>Sign in</h4>
-      <form action="/log_confirm" method="POST">
-        Email: <input type="text" name="email"><br>
-        Password: <input type="password" name="password"><br>
-        <input type="submit">        
-    </form>
+     <button type="button" id="logout" class="btn btn-default btn-sm">
+          <a href='/logout'>Log Out<span ></span></a>
+        </button>
 
-    <br>or<br>
+    {% else %}
+      <h4>Sign in</h4>
+        <form action="/log_confirm" method="POST">
+          Email: <input type="text" name="email"><br>
+          Password: <input type="password" name="password"><br>
+          <input type="submit">        
+        </form>
+      </h4>
+      <br>Or<br>
+      <h4>Register</h4>
+        <form action="/register_confirm" method="POST">
+          Name:<input type="text" name="name"><br>
+          Email:<input type="text" name="email"><br>
+          Password:<input type="password" name="password"><br><br>
+          
+          Check all blogs that you would like to follow:<br>
+          <input type="checkbox" name="blog" value="1">Cal Newport: Study Hacks<br>
+          <input type="checkbox" name="blog" value="2">PsyBlog<br>
+          <input type="checkbox" name="blog" value="3">DeSmogBlog<br>
+          <input type="checkbox" name="blog" value="4">Mr. Money Mustache<br>
+          <input type="checkbox" name="blog" value="5">ReadyTwoWear<br><br>
+          <input type="submit">        
+        </form>
         <br>
-
-    <h4>
-    <a href="/register">Register</a>
-  </h4>
+  	{% endif %}
   </body>
 </html>
