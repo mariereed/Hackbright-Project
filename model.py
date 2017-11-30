@@ -23,6 +23,8 @@ class User(db.Model):
     email = db.Column(db.String(40), nullable=False)
     password = db.Column(db.String(200), nullable=False)
     user_since = db.Column(db.DateTime, nullable=False)
+    avatar = db.Column(db.String(300), default="https://anime.aminoapps.com/static/img/user-icon-placeholder.png")
+    background_img = db.Column(db.String(300), default="https://fthmb.tqn.com/f1rGpVYiLgur40BW2zN69cNG_C8=/3000x1926/filters:fill(auto,1)/fog-56a407943df78cf772806f75.jpg")
 
     def __repr__(self):
         """Provide helpful representation when printed."""

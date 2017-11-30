@@ -8,7 +8,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js"></script>
 
     <style>{% block style %}STYLE CONTENT GOES HERE{% endblock %}
-      body { padding-top: 70px; }
+      body { 
+            padding-top: 70px;
+            background-image: url("{{session['background_img']}}");
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-attachment: fixed;
+            }
     </style>
   </head>
   <body>
@@ -25,6 +31,7 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="#">
+        <!-- BRAND -->
         <img alt="Brand" src="http://payrollme.com/pme/pme/wp-content/uploads/2015/04/Cloud-02.png" width="50" height="50">
       </a>
         </div>
@@ -34,7 +41,8 @@
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  <img alt="Brand" src="https://anime.aminoapps.com/static/img/user-icon-placeholder.png" width="40" height="40">
+                  <!-- AVATAR -->
+                  <img alt="Brand" src="{{session['avatar']}}" width="40" height="40">
                 <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <!-- Change to if dshbrd go to timeline -->

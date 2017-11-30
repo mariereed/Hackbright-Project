@@ -1,7 +1,7 @@
 """ The purpose of this file is to run the server."""
 
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, redirect, request, flash, session, g, jsonify
+from flask import Flask, render_template, redirect, request, flash, session, g, jsonify, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Blog, User_blog, Favorite, Article, connect_to_db, db
 from bs import beautify
@@ -9,6 +9,10 @@ from bs_old import text_from_html
 from datetime import datetime
 from functools import wraps
 import bcrypt
+import os
+from werkzeug.utils import secure_filename
+from flask_uploads import UploadSet, configure_uploads, IMAGES
+
 
 # -------- Set Up ----------------------------------------------
 app = Flask(__name__)
@@ -16,6 +20,21 @@ app = Flask(__name__)
 app.secret_key = "ABC"
 # Raise error for undefined variable
 app.jinja_env.undefined = StrictUndefined
+
+# -------- File Upload -----------------------------------------
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+UPLOAD_FOLDER = './static/img'
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+def allowed_file(filename):
+    """Checks if an uploaded file is the right type"""
+
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # -------- Routes ----------------------------------------------
 
@@ -78,6 +97,8 @@ def log_confirm():
     if check:
         if bcrypt.checkpw(password, check.password.encode("utf-8")):
             session['user_id'] = check.user_id
+            session['avatar'] = check.avatar
+            session['background_img'] = check.background_img
             return redirect('/dashboard')
         else:
             flash('Incorrect login information')
@@ -168,6 +189,52 @@ def display_user_details():
                            not_followed_blogs=not_followed_blogs)
 
 
+@app.route('/change_avatar', methods=["POST"])
+@login_required
+def change_avatar():
+    """Change the avatar for the user."""
+
+    file = request.files['avatar']
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        user = User.query.filter(User.user_id == g.user_id).first()
+        user.avatar = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+        db.session.commit()
+    else:
+        if not file:
+            flash('No file selected')
+        elif not allowed_file(file.filename):
+            flash('Invalid file type')
+        else:
+            flash('Unknown Error')
+
+    return redirect('/dashboard')
+
+
+@app.route('/change_background', methods=["POST"])
+@login_required
+def change_background():
+    """Change background image for user."""
+
+    file = request.files['background_img']
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        user = User.query.filter(User.user_id == g.user_id).first()
+        user.background_img = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+        db.session.commit()
+    else:
+        flash('Invalid file type')
+
+    return redirect('/dashboard')
+
 @app.route('/remove_blog', methods=["POST"])
 @login_required
 def unfollow_blog():
@@ -180,7 +247,8 @@ def unfollow_blog():
         # If there are records of this blog in user_blogs, then proceed.
         if check:
         # Delete blog for this user.
-            blog = User_blog.query.filter(User_blog.user_id == g.user_id, User_blog.blog_id == request.form.get('rem_blog')).first()
+            blog = User_blog.query.filter(User_blog.user_id == g.user_id,
+                                          User_blog.blog_id == request.form.get('rem_blog')).first()
 
             db.session.delete(blog)
             db.session.commit()
@@ -224,7 +292,10 @@ def display_users_timeline():
     for item in users_blogs:
         blogs.append(item.blog_id)
 
-    articles = Article.query.filter(Article.blog_id.in_(blogs), db.not_(Article.article_id.in_(hidden_ids))).order_by(Article.publish_date.desc()).all()
+    articles = Article.query.filter(Article.blog_id.in_(blogs),
+                                    db.not_(Article.article_id.in_(hidden_ids))
+                                            ).order_by(Article.publish_date.desc()
+                                    ).all()
     # Here i need to order the articles by publish date
 
     formatted_art = [{'content': text_from_html(article.content or ''),
@@ -232,29 +303,6 @@ def display_users_timeline():
                       'db_info': article} for article in articles]
 
     return render_template('users_timeline.html',
-                           user=g.current_user,
-                           formatted_art=formatted_art,
-                           users_blogs=users_blogs,
-                           faved_ids=faved_ids
-                           )
-
-
-@app.route('/favorites')
-@login_required
-def display_users_favorites():
-    """Display the timeline with truncated texts and no images."""
-
-    users_blogs = User_blog.query.filter(User_blog.user_id == g.user_id).all()
-
-    favorites = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden != True).all()
-    # .order_by(Favorite.article.publish_date.desc())
-    formatted_art = [{'content': text_from_html(favorite.article.content or ''),
-                      'description': text_from_html(favorite.article.description or ''),
-                      'db_info': favorite.article} for favorite in favorites]
-
-    faved_ids = [favorite.article_id for favorite in favorites]
-
-    return render_template('users_favorites.html',
                            user=g.current_user,
                            formatted_art=formatted_art,
                            users_blogs=users_blogs,
@@ -297,7 +345,9 @@ def unlike_an_article():
         # If there are records of this article in favorites, then proceed.
         if check:
         # Create a favorite from the ajax request
-            favorite = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.article_id == request.form.get('articleId')).first()
+            favorite = Favorite.query.filter(Favorite.user_id == g.user_id,
+                                             Favorite.article_id == request.form.get('articleId')
+                                             ).first()
 
             db.session.delete(favorite)
             db.session.commit()

@@ -5,12 +5,7 @@
 {% endblock %}
 
 {% block style %}
-body {
-    background-image: url("https://fthmb.tqn.com/f1rGpVYiLgur40BW2zN69cNG_C8=/3000x1926/filters:fill(auto,1)/fog-56a407943df78cf772806f75.jpg");
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-attachment: fixed;
-}
+
 {% endblock %}
 
 {% block content %}
@@ -48,20 +43,16 @@ body {
     </form>
 
     <h5>Change profile photo</h5>
-    <form action='/change_avatar' method='POST'>
-        <select name="avatar">
-            <option value="" disabled selected></option>
-        </select>
-        <input type='submit' class="btn btn-default btn-sm">
+    <form action="/change_avatar" enctype='multipart/form-data' method='POST'> 
+        <input type="file" name="avatar" value="fileupload" id="fileupload">
+        <input type='submit' class="btn btn-default btn-sm"> 
     </form>
-
     <h5>Change background image</h5>
-    <form action='/change_background' method='POST'>
-        <select name="background">
-            <option value="" disabled selected></option>
-        </select>
-        <input type='submit' class="btn btn-default btn-sm">
+    <form action="/change_background" enctype='multipart/form-data' method='POST'> 
+        <input type="file" name="background_img" value="fileupload" id="fileupload">
+        <input type='submit' class="btn btn-default btn-sm"> 
     </form>
+    
 
     <script src="/static/js/unlike.js"></script>
 
