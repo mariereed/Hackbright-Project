@@ -12,6 +12,9 @@
     			background-size: 100%;
     			background-attachment: fixed;
 			  	}
+      .img-circle {
+          border-radius: 50%;
+          }
     </style>
   </head>
   <body>
@@ -29,6 +32,7 @@
 
   	{% if user %}
   		<a href='/dashboard'>
+        <img alt="Avatar" class="img-circle" src="/static/img/{{session['avatar']}}" width="200" height="200">
     		<h4>Continue as {{user.name}}?</h4>
   		</a>
      <button type="button" id="logout" class="btn btn-default btn-sm">
