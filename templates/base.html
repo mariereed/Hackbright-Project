@@ -18,6 +18,17 @@
       .img-circle {
           border-radius: 50%;
           }
+      .navbar-nav > li > a, .navbar-brand {
+          padding-top:10px !important; padding-bottom:10 !important;
+          height: 60px;
+          }
+    .navbar {
+          min-height:50px !important;
+          }
+    .navbar-brand{
+          padding-top:0px !important; 
+          padding-bottom:0px !important;
+    }
     </style>
   </head>
   <body>
@@ -35,7 +46,7 @@
           </button>
           <a class="navbar-brand" href="/">
         <!-- BRAND -->
-        <img alt="Brand" src="http://payrollme.com/pme/pme/wp-content/uploads/2015/04/Cloud-02.png" width="50" height="50">
+        <img alt="Brand" src="http://payrollme.com/pme/pme/wp-content/uploads/2015/04/Cloud-02.png" width="70" height="70">
       </a>
         </div>
 
@@ -45,7 +56,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <!-- AVATAR -->
-                  <img alt="Brand" class="img-circle" src="/static/img/{{session['avatar']}}" width="40" height="40">
+                  <img alt="Brand" class="img-circle" src="/static/img/{{session['avatar']}}" width="50" height="50">
                 <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <!-- Change to if dshbrd go to timeline -->
