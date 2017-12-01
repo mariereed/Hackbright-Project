@@ -1,18 +1,18 @@
 """ The purpose of this file is to run the server."""
 
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, redirect, request, flash, session, g, jsonify, url_for
+from flask import Flask, render_template, redirect, request, flash, session, g, jsonify, url_for, make_response
 from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Blog, User_blog, Favorite, Article, connect_to_db, db
 from bs import beautify
 from bs_old import text_from_html
 from datetime import datetime
-from functools import wraps
+from functools import wraps, update_wrapper
 import bcrypt
 import os
 from werkzeug.utils import secure_filename
 from flask_uploads import UploadSet, configure_uploads, IMAGES
-
+from datetime import datetime
 
 # -------- Set Up ----------------------------------------------
 app = Flask(__name__)
@@ -47,6 +47,19 @@ def login_required(decorated_view):
         return decorated_view(*args, **kwargs)
         # I could take this out becuase I don't pass in values
     return decorated_function
+
+
+# def nocache(view):
+#     @wraps(view)
+#     def no_cache(*args, **kwargs):
+#         response = make_response(view(*args, **kwargs))
+#         response.headers['Last-Modified'] = datetime.now()
+#         response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+#         response.headers['Pragma'] = 'no-cache'
+#         response.headers['Expires'] = '-1'
+#         return response
+
+    # return update_wrapper(no_cache, view)
 
 
 @app.before_request
@@ -99,7 +112,7 @@ def log_confirm():
             session['user_id'] = check.user_id
             session['avatar'] = check.avatar
             session['background_img'] = check.background_img
-            return redirect('/dashboard')
+            return redirect('/timeline')
         else:
             flash('Incorrect login information')
             return redirect('/')
@@ -147,15 +160,9 @@ def register_confirm():
         return redirect('/dashboard')
 
 
-@app.route('/register')
-def register():
-    """ Registration page."""
-
-    return render_template('register.html')
-
-
 @app.route('/dashboard')
 @login_required
+@nocache
 def display_user_details():
     """ This page displays the user's details."""
 
@@ -278,6 +285,7 @@ def follow_blog():
 
 @app.route('/timeline')
 @login_required
+@nocache
 def display_users_timeline():
     """Display the timeline with truncated texts and no images."""
 
@@ -383,6 +391,7 @@ def hide_an_article():
 
 
 @app.route('/articles/<article_id>')
+@nocache
 def display_article_details(article_id):
     """Display full article content and additional links, information."""
 
