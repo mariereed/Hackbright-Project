@@ -49,19 +49,6 @@ def login_required(decorated_view):
     return decorated_function
 
 
-def nocache(view):
-    @wraps(view)
-    def no_cache(*args, **kwargs):
-        response = make_response(view(*args, **kwargs))
-        response.headers['Last-Modified'] = datetime.now()
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
-        response.headers['Pragma'] = 'no-cache'
-        response.headers['Expires'] = '-1'
-        return response
-
-    return update_wrapper(no_cache, view)
-
-
 @app.before_request
 def pre_process_all_requests():
     """Setup the request context"""
@@ -162,7 +149,6 @@ def register_confirm():
 
 @app.route('/dashboard')
 @login_required
-@nocache
 def display_user_details():
     """ This page displays the user's details."""
 
@@ -285,7 +271,6 @@ def follow_blog():
 
 @app.route('/timeline')
 @login_required
-@nocache
 def display_users_timeline():
     """Display the timeline with truncated texts and no images."""
 
@@ -297,7 +282,7 @@ def display_users_timeline():
 
     hiddens = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden == True).all()
 
-    hidden_ids = [favorite.article_id for hidden in hiddens]
+    hidden_ids = [hidden.article_id for hidden in hiddens]
     blogs = []
     for item in users_blogs:
         blogs.append(item.blog_id)
@@ -391,7 +376,6 @@ def hide_an_article():
 
 
 @app.route('/articles/<article_id>')
-@nocache
 def display_article_details(article_id):
     """Display full article content and additional links, information."""
 

@@ -77,10 +77,11 @@ class Favorite(db.Model):
     """Favorited articles of my users."""
 
     __tablename__ = "favorites"
+    __table_args__ = (db.UniqueConstraint('user_id', 'article_id'),)
 
     fav_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    article_id = db.Column(db.Integer, db.ForeignKey('articles.article_id'), unique=True, nullable=False)
+    article_id = db.Column(db.Integer, db.ForeignKey('articles.article_id'), nullable=False)
     hidden = db.Column(db.Boolean, default=False)
 
     # Define relationship to user

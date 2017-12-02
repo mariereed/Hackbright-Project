@@ -10,6 +10,14 @@
         box-sizing: border-box;
     }
 
+    /*.bk-img {
+        background-color: white;
+        opacity: 0.5; 
+    }*/
+
+    .row, h1 {
+        color: black;
+    }
     body {
       margin: 0;
     }
@@ -34,7 +42,7 @@
     <script src="/static/js/unlike.js"></script>
 
     <div class="row">
-        <div class="column-left">
+        <div class="column-left bk-img">
             <h3>Favorites</h3>
             {% if not formatted_art %}
                 <h4>You have not favorited any articles yet!</h4>
@@ -63,7 +71,7 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="column-right">
+        <div class="column-right bk-img">
             <h3>Blogs you follow:</h3>
             <ul>
             {% for item in users_blogs %}
