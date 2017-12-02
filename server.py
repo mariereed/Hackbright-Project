@@ -198,6 +198,8 @@ def change_avatar():
         user = User.query.filter(User.user_id == g.user_id).first()
         user.avatar = filename
 
+        session['avatar'] = user.avatar
+
         db.session.commit()
     else:
         if not file:
@@ -223,6 +225,8 @@ def change_background():
 
         user = User.query.filter(User.user_id == g.user_id).first()
         user.background_img = filename
+
+        session['background_img'] = user.background_img
 
         db.session.commit()
     else:

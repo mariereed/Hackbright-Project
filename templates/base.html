@@ -10,7 +10,9 @@
     <style>
       body { 
             padding-top: 70px;
-            background-image: url('/static/img/{{session['background_img']}}');
+            background-image:linear-gradient(rgba(255, 255, 255, 0.5),
+                                             rgba(255, 255, 255, 0.5)), 
+                                             url('/static/img/{{session['background_img']}}');
             background-repeat: no-repeat;
             background-size: 100%;
             background-attachment: fixed;
