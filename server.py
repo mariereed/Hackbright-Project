@@ -137,8 +137,7 @@ def register_confirm():
         for blog in blogs:
             connection = User_blog(user_id=name.user_id, blog_id=int(blog))
             db.session.add(connection)
-
-        db.session.commit()
+            db.session.commit()
         session['user_id'] = name.user_id
         session['avatar'] = name.avatar
         session['background_img'] = name.background_img
@@ -205,7 +204,7 @@ def change_avatar():
         elif not allowed_file(file.filename):
             flash('Invalid file type')
         else:
-            flash('Unknown Error')
+            flash('An Error Occurred')
 
     return redirect('/dashboard')
 
@@ -228,9 +227,15 @@ def change_background():
 
         db.session.commit()
     else:
-        flash('Invalid file type')
+        if not file:
+            flash('No file selected')
+        elif not allowed_file(file.filename):
+            flash('Invalid file type')
+        else:
+            flash('An Error Occurred')
 
     return redirect('/dashboard')
+
 
 @app.route('/remove_blog', methods=["POST"])
 @login_required
@@ -241,14 +246,16 @@ def unfollow_blog():
         check = User_blog.query.filter(User_blog.user_id == g.user_id,
                                        User_blog.blog_id == request.form.get('rem_blog')
                                        ).first()
+
         # If there are records of this blog in user_blogs, then proceed.
         if check:
-        # Delete blog for this user.
+            # Delete blog for this user.
             blog = User_blog.query.filter(User_blog.user_id == g.user_id,
                                           User_blog.blog_id == request.form.get('rem_blog')).first()
 
             db.session.delete(blog)
             db.session.commit()
+
     return redirect('/dashboard')
 
 
@@ -261,13 +268,15 @@ def follow_blog():
         check = User_blog.query.filter(User_blog.user_id == g.user_id,
                                        User_blog.blog_id == request.form.get('add_blog')
                                        ).first()
+
         # If there are no records of this blog in user_blogs, then proceed.
         if not check:
-        # Add blog for this user.
+            # Add blog for this user.
             connection = User_blog(user_id=g.user_id, blog_id=request.form.get('add_blog'))
 
             db.session.add(connection)
             db.session.commit()
+
     return redirect('/dashboard')
 
 
@@ -285,15 +294,15 @@ def display_users_timeline():
     hiddens = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden == True).all()
 
     hidden_ids = [hidden.article_id for hidden in hiddens]
+
     blogs = []
     for item in users_blogs:
         blogs.append(item.blog_id)
 
+    # Here i need to order the articles by publish date
     articles = Article.query.filter(Article.blog_id.in_(blogs),
                                     db.not_(Article.article_id.in_(hidden_ids))
-                                            ).order_by(Article.publish_date.desc()
-                                    ).all()
-    # Here i need to order the articles by publish date
+                                    ).order_by(Article.publish_date.desc()).all()
 
     formatted_art = [{'content': text_from_html(article.content or ''),
                       'description': text_from_html(article.description or ''),
@@ -303,8 +312,7 @@ def display_users_timeline():
                            user=g.current_user,
                            formatted_art=formatted_art,
                            users_blogs=users_blogs,
-                           faved_ids=faved_ids
-                           )
+                           faved_ids=faved_ids)
 
 
 @app.route('/like', methods=["POST"])
@@ -316,9 +324,10 @@ def like_an_article():
         check = Favorite.query.filter(Favorite.user_id == g.user_id,
                                       Favorite.article_id == request.form.get('articleId')
                                       ).first()
+
         # If there are no records of this articles in favorites, then proceed.
         if not check:
-        # Create a favorite from the ajax request
+            # Create a favorite from the ajax request
             favorite = Favorite(user_id=g.user_id, article_id=request.form.get('articleId'))
 
             db.session.add(favorite)
@@ -337,9 +346,10 @@ def unlike_an_article():
         check = Favorite.query.filter(Favorite.user_id == g.user_id,
                                       Favorite.article_id == request.form.get('articleId')
                                       ).first()
+
         # If there are records of this article in favorites, then proceed.
         if check:
-        # Create a favorite from the ajax request
+            # Create a favorite from the ajax request
             favorite = Favorite.query.filter(Favorite.user_id == g.user_id,
                                              Favorite.article_id == request.form.get('articleId')
                                              ).first()
@@ -361,9 +371,10 @@ def hide_an_article():
         check = Favorite.query.filter(Favorite.user_id == g.user_id,
                                       Favorite.article_id == article_id
                                       ).first()
+
         # If there are no records of this articles in favorites, then proceed.
         if not check:
-        # Create a favorite from the ajax request
+            # Create a favorite from the ajax request
             favorite = Favorite(user_id=g.user_id, article_id=article_id, hidden=True)
 
             db.session.add(favorite)
@@ -388,7 +399,10 @@ def display_article_details(article_id):
 
     faved_ids = [favorite.article_id for favorite in favorites]
 
-    return render_template('article_details.html', faved_ids=faved_ids, article=article, formatted_art=formatted_art)
+    return render_template('article_details.html',
+                           faved_ids=faved_ids,
+                           article=article,
+                           formatted_art=formatted_art)
 
 
 if __name__ == "__main__":

@@ -90,6 +90,9 @@
         </div>
         <div class="column-right">
             <h2>Settings:</h2>
+            {% for message in get_flashed_messages() %}
+                <p> {{ message }} </p>
+            {% endfor %}
             <h5>Unfollow a blog:</h5>
             <form action='/remove_blog' method='POST'>
                 <select name="rem_blog">
