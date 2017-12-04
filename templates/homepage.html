@@ -5,68 +5,131 @@
     <!-- Scripts and Styles -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="/static/js/register.js"></script>
     <style>
+
     	body {
     			background-image: url("https://fthmb.tqn.com/f1rGpVYiLgur40BW2zN69cNG_C8=/3000x1926/filters:fill(auto,1)/fog-56a407943df78cf772806f75.jpg");
     			background-repeat: no-repeat;
     			background-size: 100%;
     			background-attachment: fixed;
-			  	}
+			}
+
       h4 {
         color: black;
       }
+
+      h1 {
+        padding-left: 20px;
+      }
       .img-circle {
           border-radius: 50%;
-          }
+      }
 
+      .sign-in {
+          border-radius: 5px;
+          width: 25%;
+          margin: 50px;
+          border-style: solid;
+          float: left;
+          padding-left: 20px;
+      }
+
+      input[name=password] {
+        margin: 6px 0;
+        padding: 2px 5px;
+        border-radius: 5px;
+      }
+      input[name=name] {
+        margin: 6px 0;
+        padding: 2px 5px;
+        border-radius: 5px;
+      }
+      input[name=email] {
+        margin: 6px 0;
+        padding: 2px 5px;
+        border-radius: 5px;
+      }
+      input[type=submit] {
+        border-radius: 5px;
+      }
+
+      .continue-as {
+        text-align: center;
+        padding-right: 20px;
+      }
+
+      a {
+        color: black;
+        font-size: 14px;
+      }
     </style>
   </head>
   <body>
-    {% for message in get_flashed_messages() %}
-        <p> {{ message }} </p>
-    {% endfor %}
   	<br>
   	<br>
   	<br>
   	<h1>Blog Defog</h1>
-  	<br>
-  	<br>
-  	<br>
-
-
+  	
+<div class="sign-in "><div>
+    <br>
   	{% if user %}
-  		<a href='/dashboard'>
+    <div class="continue-as">
+  		<a href='/timeline'>
         <img alt="Avatar" class="img-circle" src="/static/img/{{session['avatar']}}" width="200" height="200">
-    		<h4>Continue as {{user.name}}?</h4>
   		</a>
-     <button type="button" id="logout" class="btn btn-default btn-sm">
-          <a href='/logout'>Log Out<span ></span></a>
-        </button>
-
+      <br><br>
+      <button type="button" class="btn btn-default btn-sm">
+        <a href='/timeline'>Continue as {{user.name}}?<span ></span>
+      </button>
+<br><br>
+      <button type="button" id="logout" class="btn btn-default btn-sm">
+        <a href='/logout'>Log Out<span ></span></a>
+      </button>
+        <br>
+      </div>
     {% else %}
-      <h4>Sign in</h4>
+    {% for message in get_flashed_messages() %}
+        <p> {{ message }} </p>
+    {% endfor %}
+    <div class="signin-form">
         <form action="/log_confirm" method="POST">
-          Email: <input type="text" name="email"><br>
-          Password: <input type="password" name="password"><br>
-          <input type="submit">        
+          <input type="text" name="email" placeholder="Email"><br>
+          <input type="password" name="password" placeholder="Password"><br><br>
+          <input type="submit" value="Sign In">       
         </form>
       </h4>
-      <br>Or<br>
-      <h4>Register</h4>
+    
+
+      <br>
+      <button type="button" id="logout" class="btn btn-default btn-sm registration">
+        Register an new user<span ></span>
+      </button>
+</div>
+      <div class="registration-form hidden">
         <form action="/register_confirm" method="POST">
-          Name:<input type="text" name="name"><br>
-          Email:<input type="text" name="email"><br>
-          Password:<input type="password" name="password"><br><br>
+          <input type="text" name="name" placeholder="Name"><br>
+          <input type="text" name="email" placeholder="Email"><br>
+          <input type="password" name="password" placeholder="Password"><br><br>
           
-          Check all blogs that you would like to follow:<br>
-          <input type="checkbox" name="blog" value="1">Cal Newport: Study Hacks<br>
-          <input type="checkbox" name="blog" value="2">PsyBlog<br>
-          <input type="checkbox" name="blog" value="3">DeSmogBlog<br>
-          <input type="checkbox" name="blog" value="4">Mr. Money Mustache<br>
-          <input type="checkbox" name="blog" value="5">ReadyTwoWear<br><br>
-          <input type="submit">        
+          <h4>Check all blogs to follow:</h4>
+          <label><input type="checkbox" name="blog" value="1"> Cal Newport: Study Hacks</label><br>
+          <label><input type="checkbox" name="blog" value="4"> Mr. Money Mustache</label><br>
+          <label><input type="checkbox" name="blog" value="5"> ReadyTwoWear</label><br>
+          <label><input type="checkbox" name="blog" value="3"> DeSmogBlog</label><br>
+          <label><input type="checkbox" name="blog" value="2"> PsyBlog</label><br><br>
+          <input type="submit" value="Register">        
         </form>
         <br>
+        
+
+        <br>
+        <button type="button" id="logout" class="btn btn-default btn-sm signin">
+        I already have an account<span ></span>
+      </button>
+      </div></div>
   	{% endif %}
+    <br>
+</div>
   </body>
 </html>

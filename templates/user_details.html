@@ -6,20 +6,23 @@
 
 {% block style %}
 <style>
-    .row, h1 {
-        color: black;
+    .column {
+        box-sizing: border-box;
     }
 
     .column-left {
         float: left;
         width: 70%;
-        padding: 20px;
+        padding: 5px;
     }
 
     .column-right {
         float: right;
         width: 30%;
-        padding: 20px;
+        padding: 5px;
+    }
+    h1 {
+        padding-left: 20px;
     }
 </style>
 {% endblock %}
@@ -29,9 +32,9 @@
 
     <script src="/static/js/unlike.js"></script>
 
-    <div class="row">
+    <div class="rowsie">
         <div class="column-left bk-img">
-            <h3>Favorites</h3>
+            <h2>Favorites</h2>
             {% if not formatted_art %}
                 <h4>You have not favorited any articles yet!</h4>
             {% endif %}
@@ -49,7 +52,7 @@
                             {{article['db_info'].title}}
                         </a>
                     </h3>
-                    <h6>{{article['db_info'].blog.name}} Published: {{article['db_info'].publish_date}}</h6>
+                    <h6>{{article['db_info'].blog.name}}, Published: {{article['db_info'].publish_date}}</h6>
                     {% if article['db_info'].description %}
                         <p>{{article['description']|safe|truncate(300, end='[...]')}}</p>
                     {% elif article['content'] %}
@@ -100,7 +103,7 @@
             <h5>Change background image</h5>
             <form action="/change_background" enctype='multipart/form-data' method='POST'> 
                 <input type="file" name="background_img" value="fileupload" id="fileupload">
-                <input type='submit' class="btn btn-default btn-sm"> 
+                <input type='submit' class="btn btn-default btn-sm">
             </form>
         </div>
     </div>
