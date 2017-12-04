@@ -14,6 +14,7 @@
         float: left;
         width: 70%;
         padding: 5px;
+        min-height: 400px;
     }
 
     .column-right {
@@ -24,8 +25,8 @@
     h1 {
         padding-left: 20px;
     }
-    input[type=file] {
-        display: inline;
+    input {
+        font-family: 'Source Serif Pro', serif;
     }
 </style>
 {% endblock %}
@@ -40,8 +41,23 @@
             <h2>Favorites</h2>
             {% if not formatted_art %}
                 <h4>You have not favorited any articles yet!</h4>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
             {% endif %}
             {% for article in formatted_art %}
+
                 <div id="div-{{article['db_info'].article_id}}">
                     <h3>
                         <button 

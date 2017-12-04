@@ -11,10 +11,10 @@
 {% block content %}
     <script src="/static/js/like.js"></script>
     {% for article in formatted_art %}
-        <div id="div-{{article['db_info'].article_id}}" class="rowsie">
+        <div id="div-{{article['db_info'].article_id}}" class="rowsie font-two">
             <h2>{{article['db_info'].blog.name}}</h2>
             <h3>
-                <a href="/articles/{{ article['db_info'].article_id }}">
+                <a href="/articles/{{ article['db_info'].article_id }}" class="article-title">
                     {{article['db_info'].title}}
                 </a>
             </h3>

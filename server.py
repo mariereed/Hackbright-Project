@@ -328,8 +328,6 @@ def like_an_article():
             return jsonify({'confirm': True, 'id': request.form.get('articleId')})
         else:
             return jsonify({'confirm': 'False'})
-    # else:
-    #     return jsonify({'confirm': 'False'})
 
 
 @app.route('/unlike', methods=["POST"])
@@ -388,8 +386,11 @@ def display_article_details(article_id):
     formatted_art = {'content': str(beautify(article.content or '')),
                      'description': str(beautify(article.description or ''))
                      }
+    favorites = Favorite.query.filter(Favorite.user_id == g.user_id, Favorite.hidden != True).all()
 
-    return render_template('article_details.html', article=article, formatted_art=formatted_art)
+    faved_ids = [favorite.article_id for favorite in favorites]
+
+    return render_template('article_details.html', faved_ids=faved_ids, article=article, formatted_art=formatted_art)
 
 
 if __name__ == "__main__":
