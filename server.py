@@ -1,18 +1,16 @@
 """ The purpose of this file is to run the server."""
 
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, redirect, request, flash, session, g, jsonify, url_for, make_response
+from flask import Flask, render_template, redirect, request, flash, session, g, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Blog, User_blog, Favorite, Article, connect_to_db, db
 from bs import beautify
 from bs_old import text_from_html
 from datetime import datetime
-from functools import wraps, update_wrapper
+from functools import wraps
 import bcrypt
 import os
 from werkzeug.utils import secure_filename
-from flask_uploads import UploadSet, configure_uploads, IMAGES
-from datetime import datetime
 
 # -------- Set Up ----------------------------------------------
 app = Flask(__name__)

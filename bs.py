@@ -1,5 +1,6 @@
 """ The purpose of this file is to provide the beautiful soup logic
-that prevents harmful scripts from entering the HTML."""
+that prevents harmful scripts from entering the HTML. This is used
+on the actual article content page."""
 
 from bs4 import BeautifulSoup
 

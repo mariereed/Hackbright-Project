@@ -1,8 +1,8 @@
-""" Here i will put my tests."""
+"""This file holds all tests."""
 
 import unittest
 
-from party import app
+from server import app
 from model import db, example_data, connect_to_db
 
 

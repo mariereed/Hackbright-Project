@@ -1,3 +1,6 @@
+"""This file is used to quickly change name of blogs in the database,
+some were in poor format."""
+
 from model import Blog, db, connect_to_db
 from server import app
 
