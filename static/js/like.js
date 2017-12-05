@@ -5,12 +5,9 @@ $('document').ready(function() {
         if (results.confirm === true) {
             let theLikeButton = $('#' + String(results.id));
             theLikeButton.attr('style', "color:red");
-            theLikeButton.removeClass('like');
-            theLikeButton.addClass('unlike');
         }
     }
     
-
     function likeArticle(evt) {
         $.post('/like', {'articleId': this.id}, changeButton);
     }

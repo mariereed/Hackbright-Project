@@ -19,6 +19,7 @@
     <br>
     <h4>You have not followed any blogs yet!</h4>
     {% endif %}
+    
     {% for article in formatted_art %}
         <div id="div-{{article['db_info'].article_id}}" class="rowsie font-two">
             <h2>{{article['db_info'].blog.name}}</h2>

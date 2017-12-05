@@ -5,9 +5,13 @@
 
 {% block content %}
 <script src="/static/js/like.js"></script>
+<script src="/static/js/hide_articles_page.js"></script>
 	<div class="rowsie">
-		<h2 class="article-title">{{article.title}}</h2>
 
+		<!-- Link that takes back to timeline, holds place in scroll -->
+		<a href="javascript:history.back(1)">back to timeline</a> 
+
+		<h2 class="article-title">{{article.title}}</h2>
 		<h6>
 	        <button 
 	        {% if article.article_id in faved_ids %}
