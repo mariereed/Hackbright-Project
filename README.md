@@ -45,6 +45,9 @@ Navigation:
 Homepage:
 * Create new users
 * Login
+
+Inline-style: 
+![alt text](https://github.com/mariereed/Hackbright-Project/blob/master/static/img/Screen%20Shot%202017-12-06%20at%201.42.22%20PM.png "Homepage")
    
 From the dashboard:
 * Unfavorite articles
