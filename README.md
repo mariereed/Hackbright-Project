@@ -38,9 +38,9 @@ Pip install -r requirements.txt
 Navigation:
 * Cloud returns to homepage
 * Avatar is a dropdown:
-..* Dashboard,
-..* Timeline,
-..* Logout
+  * Dashboard,
+  * Timeline,
+  * Logout
     
 Homepage:
   Create new users,
