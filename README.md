@@ -45,23 +45,27 @@ Navigation:
 Homepage:
 * Create new users
 * Login
-
-Inline-style: 
+ 
 ![alt text](https://github.com/mariereed/Hackbright-Project/blob/master/static/img/Screen%20Shot%202017-12-06%20at%201.42.22%20PM.png "Homepage")
    
 From the dashboard:
 * Unfavorite articles
 * Follow and unfollow blogs
 * Upload profile photo and custom background
-  
+
+![alt text](https://github.com/mariereed/Hackbright-Project/blob/master/static/img/Screen%20Shot%202017-12-06%20at%201.42.50%20PM.png "Dashboard")
+
 Timeline:
 * Favorite and Hide articles
 * View articles
-    
+
+![alt text](https://github.com/mariereed/Hackbright-Project/blob/master/static/img/Screen%20Shot%202017-12-06%20at%201.42.39%20PM.png "Timeline")
+
 Article Page:
 * Favorite and Hide articles
 * Back to timeline link returns to scrolled position
 
+![alt text](https://github.com/mariereed/Hackbright-Project/blob/master/static/img/Screen%20Shot%202017-12-06%20at%201.42.45%20PM.png "Article Page")
 ## Contributing
 
 1. Fork it!
