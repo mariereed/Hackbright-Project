@@ -36,36 +36,26 @@ Pip install -r requirements.txt
 ## Usage
 
 Navigation:
-
-  Cloud returns to homepage
-  
-  Avatar is a dropdown:
-    Dashboard,
-    Timeline,
-    Logout
-    
+..*Cloud returns to homepage
+..*Avatar is a dropdown:
+....*Dashboard,
+....*Timeline,
+....*Logout
     
 Homepage:
-
   Create new users,
   Login
-  
-  
+   
 From the dashboard:
-
   Unfavorite articles,
   Follow and unfollow blogs,
   Upload profile photo and custom background,
   
-  
 Timeline:
-
   Favorite and Hide articles,
   View articles
-  
-  
+    
 Article Page:
-
   Favorite and Hide articles,
   Back to timeline link returns to scrolled position
 
