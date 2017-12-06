@@ -1,8 +1,6 @@
-<snippet>
-  <content><![CDATA[
-# ${1:Project Name}
+# Blog Defog
 
-TODO: Write a project description
+Blog Defog is the media platform that your brain deserves. This simple and streamline RSS feed aggregator removes the stimulating and manipulative adds and styling commonly found on many blog and news sites. Articles are presented to the user fully sanitized, in a uniform calming format, all in one place. Blog Defog saves time, reduces mental load, and breaks the feedback loop for destructive habits.
 
 ## Installation
 
@@ -31,6 +29,3 @@ TODO: Write credits
 ## License
 
 TODO: Write license
-]]></content>
-  <tabTrigger>readme</tabTrigger>
-</snippet>
