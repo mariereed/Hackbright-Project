@@ -43,20 +43,20 @@ Navigation:
   * Logout
     
 Homepage:
-* Create new users,
+* Create new users
 * Login
    
 From the dashboard:
-* Unfavorite articles,
-* Follow and unfollow blogs,
-* Upload profile photo and custom background,
+* Unfavorite articles
+* Follow and unfollow blogs
+* Upload profile photo and custom background
   
 Timeline:
-*Favorite and Hide articles,
+* Favorite and Hide articles
 * View articles
     
 Article Page:
-* Favorite and Hide articles,
+* Favorite and Hide articles
 * Back to timeline link returns to scrolled position
 
 ## Contributing
