@@ -4,26 +4,29 @@ Blog Defog is the media platform that your brain deserves. This simple and strea
 
 ## Tech Stack
 
-Python Flask
-Flask SQLAlchemy
-JINJA2
-CSS
-HTML
-Bootstrap
-AJAX
-JSON
-Javascript
+Python Flask,
+Flask SQLAlchemy,
+JINJA2,
+CSS,
+HTML,
+Bootstrap,
+AJAX,
+JSON,
+Javascript,
 JQuery
 
 ## APIs Used
 
-Beautiful Soup
+Beautiful Soup:
   Used to sanitize content stripped from XML and to create text only sections
-Schedule
+  
+Schedule:
   Used to make requests every hour
-Bcrypt
+  
+Bcrypt:
   Used to hash passwords
-Datetime
+  
+Datetime:
   Used to compare publish dates and to timestamp
 
 ## Installation
