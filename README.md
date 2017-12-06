@@ -36,11 +36,11 @@ Pip install -r requirements.txt
 ## Usage
 
 Navigation:
-..*Cloud returns to homepage
-..*Avatar is a dropdown:
-....*Dashboard,
-....*Timeline,
-....*Logout
+* Cloud returns to homepage
+* Avatar is a dropdown:
+..* Dashboard,
+..* Timeline,
+..* Logout
     
 Homepage:
   Create new users,
