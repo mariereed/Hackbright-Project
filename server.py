@@ -95,8 +95,6 @@ def log_confirm():
     if check:
         if bcrypt.checkpw(password, check.password.encode("utf-8")):
             session['user_id'] = check.user_id
-            session['avatar'] = check.avatar
-            session['background_img'] = check.background_img
             return redirect('/timeline')
         else:
             flash('Incorrect login information')
@@ -139,8 +137,6 @@ def register_confirm():
             db.session.add(connection)
             db.session.commit()
         session['user_id'] = name.user_id
-        session['avatar'] = name.avatar
-        session['background_img'] = name.background_img
         return redirect('/dashboard')
 
 
@@ -195,8 +191,6 @@ def change_avatar():
         user = User.query.filter(User.user_id == g.user_id).first()
         user.avatar = filename
 
-        session['avatar'] = user.avatar
-
         db.session.commit()
     else:
         if not file:
@@ -222,8 +216,6 @@ def change_background():
 
         user = User.query.filter(User.user_id == g.user_id).first()
         user.background_img = filename
-
-        session['background_img'] = user.background_img
 
         db.session.commit()
     else:
@@ -400,6 +392,7 @@ def display_article_details(article_id):
     faved_ids = [favorite.article_id for favorite in favorites]
 
     return render_template('article_details.html',
+                           user=g.current_user,
                            faved_ids=faved_ids,
                            article=article,
                            formatted_art=formatted_art)

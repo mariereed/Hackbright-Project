@@ -12,7 +12,7 @@
             padding-top: 60px;
             background-image:linear-gradient(rgba(255, 255, 255, 0.5),
                                              rgba(255, 255, 255, 0.5)), 
-                                             url('/static/img/{{session['background_img']}}');
+                                             url('/static/img/{{user.background_img}}');
             background-repeat: no-repeat;
             background-size: 100% 100%;
             background-attachment: fixed;
@@ -85,7 +85,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <!-- AVATAR -->
-                  <img alt="Brand" class="img-circle" src="/static/img/{{session['avatar']}}" width="50" height="50">
+                  <img alt="Brand" class="img-circle" src="/static/img/{{user.avatar}}" width="50" height="50">
                 <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <!-- Change to if dshbrd go to timeline -->
