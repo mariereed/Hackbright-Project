@@ -40,4 +40,4 @@ untangle==1.1.1
 urllib3==1.22
 virtualenv==15.0.1
 wcwidth==0.1.7
-Werkzeug==0.11.9
+Werkzeug==0.15.3
